@@ -1,0 +1,95 @@
+$def with(post)
+<script type="text/javascript" src="static/js/jquery.js"></script>   
+<script type="text/javascript" src="static/js/jquery.form.js"></script> 
+<script type="text/javascript" src="static/js/helps.js"></script> 
+<link rel="stylesheet" href="static/css/bootstrap.min.css">
+<link rel="stylesheet" type="static/css/css" href="css/zzsc.css">
+ 
+<!-- CSS goes in the document HEAD or added to your external stylesheet -->
+<style type="text/css">
+table.gridtable {
+	font-family: verdana,arial,sans-serif;
+	font-size:10px;
+	color:#333333;
+	border-width: 1px;
+	border-color: #666666;
+	border-collapse: collapse;
+}
+table.gridtable th {
+	border-width: 1px;
+	padding: 10px;
+	border-style: solid;
+	border-color: #666666;
+	background-color: #dedede;
+}
+table.gridtable td {
+	border-width: 1px;
+	padding: 10px;
+	border-style: solid;
+	border-color: #666666;
+	background-color: #ffffff;
+}
+.loading{display: none; position: absolute; top: 50%; left: 50%; z-index:1002; }
+.class_div{ display:inline} 
+</style>
+
+
+
+<script type="text/javascript">
+    //变量初始化，存储需要请求的数据
+imgJson = {"imgString":"",
+               "num":0,
+               "url":"",
+               "result":""
+              };
+ 
+ </script>   
+
+                        
+<div class="canvas-container" >
+                                <img id='Preview' width="1600" height="1000"  src="" style="position: absolute; left: 35%; top: 50%; transform: translate(-50%, -50%) scale(0.5);z-index:1;"></img>
+                                <canvas id="myCanvas" width="1600" height="1000" style="position: absolute; left: 35%; top: 50%; transform: translate(-50%, -50%) scale(0.5);z-index:2;">
+                                
+</div>
+
+
+<div >
+      <div class="image-input-container" style="position: absolute; left: 5%; top: 10%;">
+                                    <input type="file"   id='imageButton'  accept="image/png, image/bmp, image/jpg, image/jpeg" class="image-local-input" onchange="FunimgPreview('imageButton','Preview','myCanvas')">
+                                    
+      </div> 
+ </div>
+
+
+
+
+
+<div>
+    
+ <!#############################识别结果######################################################### ---->   
+                <div style="position: absolute; left: 68%; top: 12%;" >
+                    <div class="json">
+                        <div class="json-request-title" id="billmodelname">$post.get('name')</div>
+                            <div style="height:500px;width:300px; overflow:scroll;">
+                                <div id="billNameList"></div>
+                                <div id="mytable"></div>
+                                
+                            </div>
+                        
+                    </div>
+                </div>
+                    
+              <!##############################识别结果######################################################### ---->
+                    
+
+<img id='loadingGif' width="800" height="500"  src="static/img/loading.gif" style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%) scale(0.5);z-index:1;display:none"></img>
+
+    
+
+<script type="text/javascript">
+            //点击文件,自动提交文件，进行识别
+            jQuery('#imageButton').on('change', function()  
+                      {  
+                      });
+</script> 
+
