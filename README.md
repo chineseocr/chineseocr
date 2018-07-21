@@ -29,14 +29,14 @@ ipython app.py 8080 ##8080端口号，可以设置任意端口
 
 ## 识别结果展示
 <div>
-<img width="300" height="300" src="https://github.com/chineseocr/chinsesocr/blob/master/test/img1.png"/>
-<img width="300" height="300" src="https://github.com/chineseocr/chinsesocr/blob/master/test/4.png"/>
+<img width="300" height="300" src="https://github.com/chineseocr/chineseocr/blob/master/test/img1.png"/>
+<img width="300" height="300" src="https://github.com/chineseocr/chineseocr/blob/master/test/4.png"/>
 </div>
 
 ## 访问服务
 http://127.0.0.1:8080/ocr
 
-<img width="300" height="300" src="https://github.com/chineseocr/chinsesocr/blob/master/test/demo.png"/>
+<img width="300" height="300" src="https://github.com/chineseocr/chineseocr/blob/master/test/demo.png"/>
 
 
 ## 参考
