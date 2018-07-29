@@ -9,12 +9,11 @@ make
 cd ..
 git clone https://github.com/chineseocr/chineseocr.git
 cd chineseocr
-sh setup.sh(cpu sh setpu-cpu.sh)
+sh setup.sh #(cpu sh setpu-cpu.sh)
 ```
 
 ## 下载模型文件   
 
-将近期更新
 模型文件地址:https://pan.baidu.com/s/1dEopm8VkFLuDDfVkpuzHqQ   
 或者可将yolo3模型转换为keras版本，详细参考https://github.com/qqwweee/keras-yolo3.git   
 ``` Bash
