@@ -21,7 +21,7 @@ def crnnSource():
     else:
         model = crnn.CRNN(32, 1, len(alphabet)+1, 256, 1).cpu()
 
-    state_dict = torch.load(ocrModel)
+    state_dict = torch.load(ocrModel,map_location=lambda storage, loc: storage)
     new_state_dict = OrderedDict()
     for k, v in state_dict.items():
         name = k.replace('module.','') # remove `module.`
