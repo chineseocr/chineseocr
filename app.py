@@ -11,9 +11,9 @@ import numpy as np
 import sys
 import base64
 
-import web  
+import web
 
-web.config.debug  = True    
+web.config.debug  = True
 from apphelper.image import convert_image,read_url_img,string_to_array,array_to_string,base64_to_array
 import model
 render = web.template.render('templates', base='base')
@@ -21,8 +21,8 @@ render = web.template.render('templates', base='base')
 
 class OCR:
     """通用OCR识别"""
-    
-    def GET(self):  
+
+    def GET(self):
         post = {}
         post['postName'] = u'ocr'##请求地址
         post['height'] = 1000
@@ -31,8 +31,8 @@ class OCR:
         post['W'] = 600
         post['uuid'] = uuid.uuid1().__str__()
         return render.ocr(post)
-    
-    def POST(self): 
+
+    def POST(self):
         data = web.data()
         data = json.loads(data)
         imgString = data['imgString'].encode().split(b';base64,')[-1]
@@ -43,7 +43,7 @@ class OCR:
             f.write(imgString)
         img = Image.open(path).convert("RGB")
         W,H = img.size
-        _,result,angle= model.model(img,detectAngle=True,config=dict(MAX_HORIZONTAL_GAP=200,           
+        _,result,angle= model.model(img,detectAngle=True,config=dict(MAX_HORIZONTAL_GAP=200,
                 MIN_V_OVERLAPS=0.6,
                 MIN_SIZE_SIM=0.6,
                 TEXT_PROPOSALS_MIN_SCORE=0.2,
@@ -55,20 +55,20 @@ class OCR:
                 MIN_NUM_PROPOSALS=0,
                 ),
                 leftAdjust=True,rightAdjust=True,alph=0.1)
-        
-        res = map(lambda x:{'w':x['w'],'h':x['h'],'cx':x['cx'],'cy':x['cy'],'degree':x['degree'],'text':x['text']}, result) 
+
+        res = map(lambda x:{'w':x['w'],'h':x['h'],'cx':x['cx'],'cy':x['cy'],'degree':x['degree'],'text':x['text']}, result)
         res = list(res)
-        
+
         os.remove(path)
         return json.dumps(res,ensure_ascii=False)
-    
+
 
 
 
 urls = (u'/ocr',u'OCR',
        )
-  
-if __name__ == "__main__":  
-  
-      app = web.application(urls, globals())   
+
+if __name__ == "__main__":
+
+      app = web.application(urls, globals())
       app.run()

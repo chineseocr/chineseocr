@@ -1,5 +1,5 @@
 import os
-darknetRoot = os.path.join("..","darknet")## yolo 安装目录
+darknetRoot = os.path.join(os.path.curdir,"darknet")## yolo 安装目录
 pwd = os.getcwd()
 yoloCfg = os.path.join(pwd,"models","text.cfg")
 yoloWeights = os.path.join(pwd,"models","text.weights")
