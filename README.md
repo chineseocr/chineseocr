@@ -13,7 +13,9 @@ sh setup.sh #(cpu sh setpu-cpu.sh)
 
 复制文件夹中的 ocr.pth, text.cfg, text.names, text.weights 到models目录
 
-或者可将yolo3模型转换为keras版本，详细参考https://github.com/qqwweee/keras-yolo3.git 
+或者可将yolo3模型转换为keras版本，详细参考https://github.com/qqwweee/keras-yolo3.git    
+
+或者直接运用opencv>=3.4  dnn直接调用darknet模型（参考 opencv_dnn_detect.py），cpu文本检测小于1秒。   
 
 ## web服务启动
 ``` Bash
