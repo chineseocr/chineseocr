@@ -3,6 +3,7 @@
 from detector.detectors import TextDetector
 from detector.other import get_boxes
 import darknet_detect
+import opencv_dnn_detect ##opencv dnn model for darknet
 import numpy as np
 from PIL import Image
 import numpy as np
@@ -21,9 +22,13 @@ def text_detect(img,
                 MIN_RATIO=1.0,
                 LINE_MIN_SCORE=0.8,
                 TEXT_PROPOSALS_WIDTH=5,
-                MIN_NUM_PROPOSALS=1
+                MIN_NUM_PROPOSALS=1,
+                textmodel = 'darknet_detect'
                 ):
-    boxes, scores = darknet_detect.text_detect(np.array(img))
+    if textmodel == 'darknet_detect':
+         boxes, scores = darknet_detect.text_detect(np.array(img))
+    else:
+        boxes, scores = opencv_dnn_detect.text_detect(np.array(img))
 
         
     boxes = np.array(boxes,dtype=np.float32)
