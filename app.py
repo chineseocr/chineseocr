@@ -43,6 +43,7 @@ class OCR:
             f.write(imgString)
         img = Image.open(path).convert("RGB")
         W,H = img.size
+        timeTake = time.time()
         _,result,angle= model.model(img,detectAngle=True,config=dict(MAX_HORIZONTAL_GAP=200,
                 MIN_V_OVERLAPS=0.6,
                 MIN_SIZE_SIM=0.6,
@@ -56,12 +57,13 @@ class OCR:
                 textmodel = 'opencv_dnn_detect'                                                     
                 ),
                 leftAdjust=True,rightAdjust=True,alph=0.1)
-
+        
+        timeTake = time.time()-timeTake
         res = map(lambda x:{'w':x['w'],'h':x['h'],'cx':x['cx'],'cy':x['cy'],'degree':x['degree'],'text':x['text']}, result)
         res = list(res)
 
         os.remove(path)
-        return json.dumps(res,ensure_ascii=False)
+        return json.dumps({'res':res,'timeTake':round(timeTake,4)},ensure_ascii=False)
 
 
 

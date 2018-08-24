@@ -12,7 +12,9 @@ function postImg(){
           success:function(d){
               loadingGif('loadingGif');
               imgJson['num']=0;//防止重复提交
-              imgJson["result"] = JSON.parse(d);
+              res = JSON.parse(d);
+              imgJson["result"] = res['res'];
+              imgJson["timeTake"] = res['timeTake'];
               getChildDetail();
               W = imgJson["width"];
               H = imgJson["height"];
@@ -75,7 +77,7 @@ function FunimgPreview(avatarSlect,avatarPreview,myCanvas) {
 function getChildDetail(){
   jQuery("#billmodeltable").remove();
   childResult = imgJson["result"];
-  createTable(childResult);//新建table
+  createTable(childResult,imgJson['timeTake']);//新建table
 }
 
 
@@ -83,19 +85,19 @@ function getChildDetail(){
 
 //根据获取的数据，创建table
   //创建table
-function createTable(result){
+function createTable(result,timeTake){
         //根据获取的数据，创建table
         jQuery("#mytable").empty();
         var jsObject = result;
         //var jsObject = [{"name":10,"value":20},{"name":10,"value":20}];
-        var p = "<h2>识别结果为:</h2>"
-        var tableString = "<table id='billmodeltable' class='gridtable'><tr><th>序号</th><th>值</th></tr>"
+        var p = "<h3>耗时:"+timeTake+"秒 ,识别结果为:</h3>";
+        var tableString =p+ "<table id='billmodeltable' class='gridtable'><tr><th>序号</th><th>值</th></tr>"
                         
         for(var i=0;i<jsObject.length;i++){
             tableString+="<tr><td><p>"+i+"</p></td><td><p contenteditable='true'>"+jsObject[i]["text"]+"</p></td></tr>";
         }
         tableString+="</table>";
-        jQuery("#mytable").append(p);
+        //jQuery("#mytable").append(p);
         jQuery("#mytable").append(tableString);
         
     }
