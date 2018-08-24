@@ -53,6 +53,7 @@ class OCR:
                 LINE_MIN_SCORE=0.2,
                 TEXT_PROPOSALS_WIDTH=5,
                 MIN_NUM_PROPOSALS=0,
+                textmodel = 'opencv_dnn_detect'                                                     
                 ),
                 leftAdjust=True,rightAdjust=True,alph=0.1)
 
