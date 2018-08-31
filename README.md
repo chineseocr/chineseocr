@@ -9,7 +9,9 @@ sh setup.sh #(cpu sh setpu-cpu.sh)
 ```
 
 ## 下载模型文件   
-模型文件地址:https://pan.baidu.com/s/1dEopm8VkFLuDDfVkpuzHqQ
+模型文件地址:
+* [baidu pan](https://pan.baidu.com/s/1dEopm8VkFLuDDfVkpuzHqQ)
+* [google drive](https://drive.google.com/drive/folders/1vlA6FjvicTt5GKvAfmycP5AlYxm4i9ze?usp=sharing)
 
 复制文件夹中的 ocr.pth, text.cfg, text.names, text.weights 到models目录
 
