@@ -185,6 +185,21 @@ def rotate_cut_img(im,degree,box,w,h,leftAdjust=False,rightAdjust=False,alph=0.2
     return tmpImg,newW,newH
 
 
+def letterbox_image(image, size):
+    '''resize image with unchanged aspect ratio using padding
+        Reference: https://github.com/qqwweee/keras-yolo3/blob/master/yolo3/utils.py
+        '''
+    image_w, image_h = image.size
+    w, h = size
+    new_w = int(image_w * min(w*1.0/image_w, h*1.0/image_h))
+    new_h = int(image_h * min(w*1.0/image_w, h*1.0/image_h))
+    resized_image = image.resize((new_w,new_h), Image.BICUBIC)
+    
+    boxed_image = Image.new('RGB', size, (128,128,128))
+    boxed_image.paste(resized_image, ((w-new_w)//2,(h-new_h)//2))
+    return boxed_image
+
+
 
 
 def model(img,detectAngle=False,config={},ifIm=True,leftAdjust=False,rightAdjust=False,alph=0.1):
@@ -193,7 +208,8 @@ def model(img,detectAngle=False,config={},ifIm=True,leftAdjust=False,rightAdjust
     @@param:adjust 调整文字识别结果
     @@param:detectAngle,是否检测文字朝向
     """
-    angle = 0   
+    angle = 0
+    img =letterbox_image(img, (608,608))
     config['img'] = img
     text_recs,tmp = text_detect(**config)
     
