@@ -246,9 +246,8 @@ def estimate_skew_angle(raw):
 def eval_angle(im,detectAngle=False,ifadjustDegree=True):
     """
     估计图片偏移角度
-    @@param:img,
-    @@param:model,选择的ocr模型，支持keras\pytorch版本
-    @@param:adjust 调整文字识别结果
+    @@param:im
+    @@param:ifadjustDegree 调整文字识别结果
     @@param:detectAngle 是否检测文字朝向
     """
     angle = 0

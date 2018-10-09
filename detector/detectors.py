@@ -61,13 +61,14 @@ class TextDetector:
         text_proposals, scores=text_proposals[sorted_indices], scores[sorted_indices]
 
         # nms for text proposals
-        
-        keep_inds=nms(np.hstack((text_proposals, scores)), TEXT_PROPOSALS_NMS_THRESH)##nms 过滤重复的box 
-        text_proposals, scores=text_proposals[keep_inds], scores[keep_inds]
+        if len(text_proposals)>0:
+            keep_inds=nms(np.hstack((text_proposals, scores)), TEXT_PROPOSALS_NMS_THRESH)##nms 过滤重复的box 
+            text_proposals, scores=text_proposals[keep_inds], scores[keep_inds]
 
-        scores=normalize(scores)
+            scores=normalize(scores)
 
-        text_lines=self.text_proposal_connector.get_text_lines(text_proposals, scores, size)##合并文本行
-        return text_lines
-        
+            text_lines=self.text_proposal_connector.get_text_lines(text_proposals, scores, size)##合并文本行
+            return text_lines
+        else:
+            return []
 
