@@ -19,9 +19,9 @@ mv darknet chineseocr/
 #OPENMP=0
 make 
 ```
-修改 darknet/python/darknet.py line 48
-root = '/root/'##chineseocr所在目录
-lib = CDLL(root+"chineseocr/darknet/libdarknet.so", RTLD_GLOBAL)
+修改 darknet/python/darknet.py line 48    
+root = '/root/'##chineseocr所在目录     
+lib = CDLL(root+"chineseocr/darknet/libdarknet.so", RTLD_GLOBAL)    
 
 
 ## 下载模型文件   
@@ -63,6 +63,6 @@ http://127.0.0.1:8080/ocr
 1. yolo3 https://github.com/pjreddie/darknet.git   
 2. crnn  https://github.com/meijieru/crnn.pytorch.git              
 3. ctpn  https://github.com/eragonruan/text-detection-ctpn    
-4. CTPN  https://github.com/tianzhi0549/CTPN   
-5.https://github.com/qqwweee/keras-yolo3.git 
+4. CTPN  https://github.com/tianzhi0549/CTPN       
+5. https://github.com/qqwweee/keras-yolo3.git 
 
