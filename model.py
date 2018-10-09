@@ -2,8 +2,14 @@
 # -*- coding: utf-8 -*-
 from detector.detectors import TextDetector
 from detector.other import get_boxes
-import darknet_detect
-import opencv_dnn_detect ##opencv dnn model for darknet
+from config import opencvFlag
+from config import IMGSIZE
+from opencv_dnn_detect import angle_detect##文字方向检测
+if opencvFlag:
+    import opencv_dnn_detect as detect ##opencv dnn model for darknet
+else:
+    import darknet_detect as detect
+
 import numpy as np
 from PIL import Image
 import numpy as np
@@ -23,12 +29,9 @@ def text_detect(img,
                 LINE_MIN_SCORE=0.8,
                 TEXT_PROPOSALS_WIDTH=5,
                 MIN_NUM_PROPOSALS=1,
-                textmodel = 'darknet_detect'
+                
                 ):
-    if textmodel == 'darknet_detect':
-         boxes, scores = darknet_detect.text_detect(np.array(img))
-    else:
-        boxes, scores = opencv_dnn_detect.text_detect(np.array(img))
+    boxes, scores = detect.text_detect(np.array(img))
 
         
     boxes = np.array(boxes,dtype=np.float32)
@@ -191,25 +194,91 @@ def letterbox_image(image, size):
         '''
     image_w, image_h = image.size
     w, h = size
-    new_w = int(image_w * min(w*1.0/image_w, h*1.0/image_h))
-    new_h = int(image_h * min(w*1.0/image_w, h*1.0/image_h))
-    resized_image = image.resize((new_w,new_h), Image.BICUBIC)
+    
+    if max(image_w, image_h)<min(size):
+        resized_image = image
+        new_w = w
+        new_h = h
+    else:
+        new_w = int(image_w * min(w*1.0/image_w, h*1.0/image_h))
+        new_h = int(image_h * min(w*1.0/image_w, h*1.0/image_h))
+        resized_image = image.resize((new_w,new_h), Image.BICUBIC)
     
     boxed_image = Image.new('RGB', size, (128,128,128))
     boxed_image.paste(resized_image, ((w-new_w)//2,(h-new_h)//2))
     return boxed_image
 
+from scipy.ndimage import filters,interpolation,morphology,measurements,minimum
+#from pylab import amin, amax
+from numpy import amin, amax
+def estimate_skew_angle(raw):
+    """
+    估计图像文字角度
+    """
+    raw = resize_im(raw, scale=600, max_scale=900)
+    image = raw-amin(raw)
+    image = image/amax(image)
+    m = interpolation.zoom(image,0.5)
+    m = filters.percentile_filter(m,80,size=(20,2))
+    m = filters.percentile_filter(m,80,size=(2,20))
+    m = interpolation.zoom(m,1.0/0.5)
+    #w,h = image.shape[1],image.shape[0]
+    w,h = min(image.shape[1],m.shape[1]),min(image.shape[0],m.shape[0])
+    flat = np.clip(image[:h,:w]-m[:h,:w]+1,0,1)
+    d0,d1 = flat.shape
+    o0,o1 = int(0.1*d0),int(0.1*d1)
+    flat = amax(flat)-flat
+    flat -= amin(flat)
+    est = flat[o0:d0-o0,o1:d1-o1]
+    angles = range(-15,15)
+    estimates = []
+    for a in angles:
+        
+        roest =interpolation.rotate(est,a,order=0,mode='constant')
+        v = np.mean(roest,axis=1)
+        v = np.var(v)
+        estimates.append((v,a))
+    
+    _,a = max(estimates)
+    return a
 
 
+def eval_angle(im,detectAngle=False,ifadjustDegree=True):
+    """
+    估计图片偏移角度
+    @@param:img,
+    @@param:model,选择的ocr模型，支持keras\pytorch版本
+    @@param:adjust 调整文字识别结果
+    @@param:detectAngle 是否检测文字朝向
+    """
+    angle = 0
+    degree=0.0
+    img = np.array(im)
+    if detectAngle:
+        angle = angle_detect(img=np.copy(img))##文字朝向检测
+        if angle==90:
+            im = im.transpose(Image.ROTATE_90)
+        elif angle==180:
+            im = im.transpose(Image.ROTATE_180)
+        elif angle==270:
+            im = im.transpose(Image.ROTATE_270)
+        img = np.array(im)
+        
+    if ifadjustDegree:
+       degree = estimate_skew_angle(np.array(im.convert('L')))
+    return  angle,degree,im.rotate(degree)
 
-def model(img,detectAngle=False,config={},ifIm=True,leftAdjust=False,rightAdjust=False,alph=0.1):
+
+def model(img,detectAngle=False,config={},ifIm=True,leftAdjust=False,rightAdjust=False,alph=0.2,ifadjustDegree=False):
     """
     @@param:img,
     @@param:adjust 调整文字识别结果
     @@param:detectAngle,是否检测文字朝向
     """
-    angle = 0
-    img =letterbox_image(img, (608,608))
+    angle,degree,img = eval_angle(img,detectAngle=detectAngle,ifadjustDegree=ifadjustDegree)
+    
+    img =letterbox_image(img, IMGSIZE)
+    
     config['img'] = img
     text_recs,tmp = text_detect(**config)
     

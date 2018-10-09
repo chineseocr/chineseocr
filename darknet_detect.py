@@ -8,6 +8,7 @@ os.chdir(darknetRoot)
 sys.path.append('python')
 import darknet as dn
 
+
 def array_to_image(arr):
     arr = arr.transpose(2,0,1)
     c = arr.shape[0]
@@ -56,6 +57,8 @@ net = dn.load_net(yoloCfg.encode('utf-8'), yoloWeights.encode('utf-8'), 0)
 meta = dn.load_meta(yoloData.encode('utf-8'))
 os.chdir(pwd)
 def text_detect(img):
+    inputBlob = cv2.dnn.blobFromImage(img, scalefactor=0.00390625, size=(608, 608),swapRB=True ,crop=False);
+    
     r = detect_np(net, meta, img,thresh=0.1, hier_thresh=0.5, nms=0.8)
     bboxes = to_box(r)
     return bboxes
