@@ -8,19 +8,21 @@ from crnn import util
 from crnn import dataset
 from crnn.models import crnn as crnn
 from crnn import keys
-#from conf import crnnModelPath
-#from conf import GPU
-GPU=False
 from collections import OrderedDict
-from config import ocrModel
+from config import ocrModel,LSTMFLAG,GPU
+from config import chinsesModel
 def crnnSource():
-    alphabet = keys.alphabet
+    if chinsesModel:
+        alphabet = keys.alphabetChinese
+    else:
+        alphabet = keys.alphabetEnglish
+        
     converter = util.strLabelConverter(alphabet)
     if torch.cuda.is_available() and GPU:
-       model = crnn.CRNN(32, 1, len(alphabet)+1, 256, 1).cuda()
+        model = crnn.CRNN(32, 1, len(alphabet)+1, 256, 1,lstmFlag=LSTMFLAG).cuda()##LSTMFLAG=True crnn 否则 dense ocr
     else:
-        model = crnn.CRNN(32, 1, len(alphabet)+1, 256, 1).cpu()
-
+        model = crnn.CRNN(32, 1, len(alphabet)+1, 256, 1,lstmFlag=LSTMFLAG).cpu()
+    
     state_dict = torch.load(ocrModel,map_location=lambda storage, loc: storage)
     new_state_dict = OrderedDict()
     for k, v in state_dict.items():
