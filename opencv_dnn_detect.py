@@ -34,7 +34,7 @@ def angle_detect(img,adjust=True):
     if adjust:
        thesh = 0.05
        xmin,ymin,xmax,ymax = int(thesh*w),int(thesh*h),w-int(thesh*w),h-int(thesh*h)
-       img = img[ymin:ymax,xmin:xmax]##剪切图片边缘，清楚边缘噪声
+       img = img[ymin:ymax,xmin:xmax]##剪切图片边缘
     
     
     inputBlob = cv2.dnn.blobFromImage(img, 
