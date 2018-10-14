@@ -243,6 +243,13 @@ def estimate_skew_angle(raw):
     return a
 
 
+def resize_im(im, scale, max_scale=None):
+    f=float(scale)/min(im.shape[0], im.shape[1])
+    if max_scale!=None and f*max(im.shape[0], im.shape[1])>max_scale:
+        f=float(max_scale)/max(im.shape[0], im.shape[1])
+    return cv2.resize(im, (0, 0), fx=f, fy=f)
+
+
 def eval_angle(im,detectAngle=False,ifadjustDegree=True):
     """
     估计图片偏移角度

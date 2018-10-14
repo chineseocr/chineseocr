@@ -59,7 +59,8 @@ class OCR:
                 ),
                                     leftAdjust=True,##对检测的文本行进行向左延伸
                                     rightAdjust=True,##对检测的文本行进行向右延伸
-                                    alph=0.2##对检测的文本行进行向右、左延伸的倍数
+                                    alph=0.2,##对检测的文本行进行向右、左延伸的倍数
+                                    ifadjustDegree=True
                                    )
         
         timeTake = time.time()-timeTake
