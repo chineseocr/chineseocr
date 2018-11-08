@@ -27,7 +27,7 @@ lib = CDLL(root+"chineseocr/darknet/libdarknet.so", RTLD_GLOBAL)
 ## 下载模型文件   
 模型文件地址:
 * [baidu pan](https://pan.baidu.com/s/1gTW9gwJR6hlwTuyB6nCkzQ)
-* [google drive](https://drive.google.com/drive/folders/1vlA6FjvicTt5GKvAfmycP5AlYxm4i9ze?usp=sharing)（暂时无更新）
+* [google drive](https://drive.google.com/drive/folders/1XiT1FLFvokAdwfE9WSUSS1PnZA34WBzy?usp=sharing)
 
 复制文件夹中的所有文件到models目录
 
