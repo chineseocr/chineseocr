@@ -13,7 +13,9 @@ IMGSIZE = (1024,1024)## yolo3 输入图像尺寸
 DETECTANGLE=True##是否进行文字方向检测
 LSTMFLAG = True##OCR模型是否调用LSTM层
 GPU = True##OCR 是否启用GPU
+GPUID=0##调用GPU序号
 chinsesModel = True##模型选择 True:中英文模型 False:英文模型
+
 if chinsesModel:
     if LSTMFLAG:
         ocrModel  = os.path.join(pwd,"models","ocr-lstm.pth")

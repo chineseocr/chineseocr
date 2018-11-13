@@ -9,7 +9,7 @@ import collections
 class strLabelConverter(object):
 
     def __init__(self, alphabet):
-        self.alphabet = alphabet + u'-'  # for `-1` index
+        self.alphabet = alphabet + 'ç'  # for `-1` index
         self.dict = {}
         for i, char in enumerate(alphabet):
             # NOTE: 0 is reserved for 'blank' required by wrap_ctc
@@ -19,7 +19,6 @@ class strLabelConverter(object):
         length = []
         result=[]
         for str in text:
-            str = unicode(str,"utf8")
             length.append(len(str))
             for char in str:
                #print(char)

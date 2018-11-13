@@ -3,7 +3,8 @@ import sys, os
 pwd = os.getcwd()
 import numpy as np
 from PIL import Image
-from config import yoloCfg,yoloWeights,yoloData,yoloData,darknetRoot
+
+from config import yoloCfg,yoloWeights,yoloData,yoloData,darknetRoot,GPU,GPUID
 os.chdir(darknetRoot)
 sys.path.append('python')
 import darknet as dn
@@ -52,13 +53,16 @@ def to_box(r):
 
 
 import pdb
-#dn.set_gpu(0)
+if GPU:
+    try:
+      dn.set_gpu(GPUID)
+    except:
+        pass
 net = dn.load_net(yoloCfg.encode('utf-8'), yoloWeights.encode('utf-8'), 0)
 meta = dn.load_meta(yoloData.encode('utf-8'))
 os.chdir(pwd)
 def text_detect(img):
-    inputBlob = cv2.dnn.blobFromImage(img, scalefactor=0.00390625, size=(608, 608),swapRB=True ,crop=False);
     
-    r = detect_np(net, meta, img,thresh=0.1, hier_thresh=0.5, nms=0.8)
+    r = detect_np(net, meta, img,thresh=0, hier_thresh=0.5, nms=None)##输出所有box,与opencv dnn统一
     bboxes = to_box(r)
     return bboxes

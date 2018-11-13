@@ -7,7 +7,7 @@ import cv2
 textNet = cv2.dnn.readNetFromDarknet(yoloCfg,yoloWeights)
 angleNet = cv2.dnn.readNetFromTensorflow(AngleModelPb,AngleModelPbtxt)##文字方向检测
 def text_detect(img):
-    thresh=0.1
+    thresh=0
     h,w = img.shape[:2]
     inputBlob = cv2.dnn.blobFromImage(img, scalefactor=0.00390625, size=IMGSIZE,swapRB=True ,crop=False);
     textNet.setInput(inputBlob)

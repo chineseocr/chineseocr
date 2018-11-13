@@ -1,19 +1,22 @@
 #coding:utf-8
 from detector.other import  normalize
 import numpy as np
-import numpy as np
+from config import GPUID,GPU
 from detector.utils.cython_nms import nms as cython_nms
-try:
-    from detector.utils.gpu_nms import gpu_nms
-except:
-    gpu_nms =cython_nms
+##优先加载编译对GPU编译的gpu_nms 如果不想调用GPU，在程序启动执行os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+if GPU:
+    try:
+        from detector.utils.gpu_nms import gpu_nms
+    except:
+        gpu_nms =cython_nms
 
 def nms(dets, thresh):
     if dets.shape[0] == 0:
         return []
     
     try:
-           return gpu_nms(dets, thresh, device_id=0)
+        if GPU and GPUID is not None:
+           return gpu_nms(dets, thresh, device_id=GPUID)
     except:
             return cython_nms(dets, thresh)
 
