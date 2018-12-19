@@ -16,7 +16,8 @@ def nms(dets, thresh):
     
     try:
         if GPU and GPUID is not None:
-           return gpu_nms(dets, thresh, device_id=GPUID)
+            return gpu_nms(dets, thresh, device_id=GPUID)
+        return cython_nms(dets, thresh)
     except:
             return cython_nms(dets, thresh)
 
