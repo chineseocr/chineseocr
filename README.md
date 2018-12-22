@@ -3,8 +3,7 @@
 # 实现功能
 - [x]  文字方向检测 0、90、180、270度检测（支持dnn/tensorflow） 
 - [x]  支持(darknet/opencv dnn /keras)文字检测,暂时公布（keras版本训练）
-- [x]  不定长OCR训练(英文、中英文) crnn\dense ocr
-- [x]  
+- [x]  不定长OCR训练(英文、中英文) crnn\dense ocr 
 
 
 ## 环境部署
