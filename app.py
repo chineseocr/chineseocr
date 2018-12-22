@@ -7,14 +7,9 @@ from PIL import Image
 import json
 import time
 import uuid
-import numpy as np
-import sys
 import base64
-
 import web
-
 web.config.debug  = True
-from apphelper.image import convert_image,read_url_img,string_to_array,array_to_string,base64_to_array
 import model
 render = web.template.render('templates', base='base')
 from config import DETECTANGLE
@@ -46,10 +41,10 @@ class OCR:
         timeTake = time.time()
         _,result,angle= model.model(img,
                                     detectAngle=DETECTANGLE,##是否进行文字方向检测
-                                    config=dict(MAX_HORIZONTAL_GAP=80,##字符之间的最大间隔，用于文本行的合并
-                                    MIN_V_OVERLAPS=0.6,
-                                    MIN_SIZE_SIM=0.6,
-                                    TEXT_PROPOSALS_MIN_SCORE=0.2,
+                                    config=dict(MAX_HORIZONTAL_GAP=100,##字符之间的最大间隔，用于文本行的合并
+                                    MIN_V_OVERLAPS=0.7,
+                                    MIN_SIZE_SIM=0.7,
+                                    TEXT_PROPOSALS_MIN_SCORE=0.1,
                                     TEXT_PROPOSALS_NMS_THRESH=0.3,
                                     TEXT_LINE_NMS_THRESH = 0.99,##文本行之间测iou值
                                     MIN_RATIO=1.0,
@@ -60,7 +55,7 @@ class OCR:
                                     leftAdjust=True,##对检测的文本行进行向左延伸
                                     rightAdjust=True,##对检测的文本行进行向右延伸
                                     alph=0.2,##对检测的文本行进行向右、左延伸的倍数
-                                    ifadjustDegree=True
+                                    ifadjustDegree=False##是否先小角度调整文字倾斜角度
                                    )
         
         timeTake = time.time()-timeTake
@@ -73,8 +68,7 @@ class OCR:
 
 
 
-urls = ('/ocr','OCR',
-       )
+urls = ('/ocr','OCR',)
 
 if __name__ == "__main__":
 

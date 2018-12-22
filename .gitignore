@@ -5,6 +5,7 @@
 *.egg-info
 *.pth
 *.pb
+*.h5
 *.pbtxt
 *.weights
 dist
