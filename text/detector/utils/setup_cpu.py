@@ -73,44 +73,9 @@ class custom_build_ext(build_ext):
     def build_extensions(self):
         customize_compiler_for_nvcc(self.compiler)
         build_ext.build_extensions(self)
-"""
+
 ext_modules = [
-    Extension(
-        "utils.bbox",
-        ["bbox.pyx"],
-        extra_compile_args={'gcc': ["-Wno-cpp", "-Wno-unused-function"]},
-        include_dirs = [numpy_include]
-    ),
-    Extension(
-        "utils.cython_nms",
-        ["cython_nms.pyx"],
-        extra_compile_args={'gcc': ["-Wno-cpp", "-Wno-unused-function"]},
-        include_dirs = [numpy_include]
-    ),
                
-    Extension('utils.gpu_nms',
-        ['nms_kernel.cu', 'gpu_nms.pyx'],
-        library_dirs=[CUDA['lib64']],
-        libraries=['cudart'],
-        language='c++',
-        runtime_library_dirs=[CUDA['lib64']],
-        extra_compile_args={'gcc': ["-Wno-unused-function"],
-                            'nvcc': ['-arch=sm_35',
-                                     '--ptxas-options=-v',
-                                     '-c',
-                                     '--compiler-options',
-                                     "'-fPIC'"]},
-        include_dirs = [numpy_include, CUDA['include']]
-    ),
-]
-"""
-ext_modules = [
-               Extension(
-                         "utils.bbox",
-                         ["bbox.pyx"],
-                         extra_compile_args={'gcc': ["-Wno-cpp", "-Wno-unused-function"]},
-                         include_dirs = [numpy_include]
-                         ),
                Extension(
                          "utils.cython_nms",
                          ["cython_nms.pyx"],
