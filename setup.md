@@ -8,6 +8,6 @@ pip install keras==2.1.5 tensorflow==1.8 tensorflow-gpu==1.8
 pip install web.py==0.40.dev0
 conda install pytorch torchvision -c pytorch
 ## pip install torch torchvision
-pushd detector/utils && sh make.sh && popd
+pushd text/detector/utils && sh make.sh && popd
 
 

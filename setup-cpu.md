@@ -11,5 +11,5 @@ pip install keras==2.1.5 tensorflow==1.8
 conda install pytorch torchvision -c pytorch
 ## linux
 ## conda install pytorch-cpu torchvision-cpu -c pytorch
-pushd detector/utils && sh make-for-cpu.sh && popd
+pushd text/detector/utils && sh make-for-cpu.sh && popd
 
