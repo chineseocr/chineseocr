@@ -317,15 +317,14 @@ def box_layer(inputs,anchors,num_classes):
     input_shape = K.cast(input_shape, tf.float32)
     image_shape = K.cast(image_shape, tf.float32)
     new_shape   = K.round(image_shape * K.min(input_shape/image_shape))
-    offset = (input_shape-new_shape)/2./input_shape
-    scale = input_shape/new_shape
-        
+    #offset = (input_shape-new_shape)/2./input_shape
+    #scale = input_shape/new_shape
+    #offset=0.0
+    #scale = 1.0
     for lay in range(num_layers):
         box_xy, box_wh, box_confidence, box_class_probs = yolo_head(out[lay],anchors[anchor_mask[lay]], num_classes, input_shape)
-        
-        
-        box_xy = (box_xy - offset) * scale
-        box_wh = box_wh*scale
+        #box_xy = (box_xy - offset) * scale
+        #box_wh = box_wh*scale
         
         box_score = box_confidence * box_class_probs
         box_score = K.reshape(box_score, [-1, num_classes])
