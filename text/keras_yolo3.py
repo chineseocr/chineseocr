@@ -316,11 +316,10 @@ def box_layer(inputs,anchors,num_classes):
     scores =[]
     input_shape = K.cast(input_shape, tf.float32)
     image_shape = K.cast(image_shape, tf.float32)
-    new_shape   = K.round(image_shape * K.min(input_shape/image_shape))
+    #new_shape   = K.round(image_shape * K.min(input_shape/image_shape))
     #offset = (input_shape-new_shape)/2./input_shape
     #scale = input_shape/new_shape
-    #offset=0.0
-    #scale = 1.0
+    
     for lay in range(num_layers):
         box_xy, box_wh, box_confidence, box_class_probs = yolo_head(out[lay],anchors[anchor_mask[lay]], num_classes, input_shape)
         #box_xy = (box_xy - offset) * scale
@@ -393,8 +392,9 @@ def yolo_text(num_classes,anchors,train=False):
     else:
         textModel = Model([imgInput],out)
         return textModel
-        image_shape = Input(shape=(2,))
-        input_shape = Input(shape=(2,))
-        box_scores = Lambda(box_layer,arguments={'anchors':anchors,'num_classes':num_classes})([*out,image_shape,input_shape])
-        textModel = Model([imgInput,image_shape,input_shape],box_scores)
-        return textModel
+        ## keras 取代 tf sess.run
+        #image_shape = Input(shape=(2,))
+        #input_shape = Input(shape=(2,))
+        #box_scores = Lambda(box_layer,arguments={'anchors':anchors,'num_classes':num_classes})([*out,image_shape,input_shape])
+        #textModel = Model([imgInput,image_shape,input_shape],box_scores)
+        #return textModel
