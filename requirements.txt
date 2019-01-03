@@ -13,5 +13,6 @@ pandas
 requests
 web.py==0.40.dev0
 pika
-pymongo
 matplotlib
+lxml
+bs4

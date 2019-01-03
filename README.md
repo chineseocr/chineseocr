@@ -1,14 +1,17 @@
 ## 本项目基于[yolo3](https://github.com/pjreddie/darknet.git) 与[crnn](https://github.com/meijieru/crnn.pytorch.git)  实现中文自然场景文字检测及识别
 
-## 环境部署
-python=3.6 pytorch==0.4.1
-``` Bash
-git clone https://github.com/chineseocr/chineseocr.git
-cd chineseocr
-sh setup.sh #(cpu sh setpu-cpu.sh)
-```
+# 实现功能
+- [x]  文字方向检测 0、90、180、270度检测（支持dnn/tensorflow） 
+- [x]  支持(darknet/opencv dnn /keras)文字检测,暂时公布（keras版本训练）
+- [x]  不定长OCR训练(英文、中英文) crnn\dense ocr 
 
-下载编译darknet(如果直接运用opencv dnn 可忽略darknet的编译)
+
+## 环境部署
+GPU部署 参考:setup.md     
+GPU部署 参考:setup-cpu.md   
+
+
+### 下载编译darknet(如果直接运用opencv dnn或者keras yolo3 可忽略darknet的编译)  
 ```
 git clone https://github.com/pjreddie/darknet.git 
 mv darknet chineseocr/
@@ -19,6 +22,7 @@ mv darknet chineseocr/
 #OPENMP=0
 make 
 ```
+
 修改 darknet/python/darknet.py line 48    
 root = '/root/'##chineseocr所在目录     
 lib = CDLL(root+"chineseocr/darknet/libdarknet.so", RTLD_GLOBAL)    
@@ -30,10 +34,7 @@ lib = CDLL(root+"chineseocr/darknet/libdarknet.so", RTLD_GLOBAL)
 * [google drive](https://drive.google.com/drive/folders/1XiT1FLFvokAdwfE9WSUSS1PnZA34WBzy?usp=sharing)
 
 复制文件夹中的所有文件到models目录
-
-也可将yolo3模型转换为keras版本，详细参考https://github.com/qqwweee/keras-yolo3.git    
-
-或者直接运用opencv>=3.4  dnn模块调用darknet模型(参考 opencv_dnn_detect.py)。   
+   
 
 ## web服务启动
 ``` Bash
@@ -64,5 +65,5 @@ http://127.0.0.1:8080/ocr
 2. crnn  https://github.com/meijieru/crnn.pytorch.git              
 3. ctpn  https://github.com/eragonruan/text-detection-ctpn    
 4. CTPN  https://github.com/tianzhi0549/CTPN       
-5. https://github.com/qqwweee/keras-yolo3.git 
+5. keras yolo3 https://github.com/qqwweee/keras-yolo3.git 
 

@@ -33,6 +33,18 @@ function loadingGif(loadingGif){
         {imgId.style.display="block";}}
 
 
+function resize_im(w,h, scale, max_scale){
+    f=parseFloat(scale)/Math.min(h, w);
+    if(f*Math.max(h, w)>max_scale){
+            f=parseFloat.float(max_scale)/max(h, w);
+    }
+    newW = parseInt(w*f);
+    newH    =parseInt(h*f);
+    
+    return [newW,newH]
+}
+
+
 function FunimgPreview(avatarSlect,avatarPreview,myCanvas) {
                 //avatarSlect 上传文件控件
                 //avatarPreview 预览图片控件
@@ -49,8 +61,17 @@ function FunimgPreview(avatarSlect,avatarPreview,myCanvas) {
                       image.onload=function(){
                                       var width = image.width;
                                       var height = image.height;
+                                      newWH =resize_im(width,height, 800, 1600);
+                                      newW = newWH[0];
+                                      newH = newWH[1]; 
                                       imgJson.width = width;
                                       imgJson.height = height;
+                                      jQuery("#"+avatarPreview).attr('width',newW);
+                                      jQuery("#"+avatarPreview).attr('height',newH);
+                                      jQuery("#"+'myCanvas').attr('width',newW);
+                                      jQuery("#"+'myCanvas').attr('height',newH);
+                          
+                                      /*
                                       if(width>height){
                                       jQuery("#"+avatarPreview).attr('width',1600);
                                       jQuery("#"+avatarPreview).attr('height',800);
@@ -63,6 +84,7 @@ function FunimgPreview(avatarSlect,avatarPreview,myCanvas) {
                                           jQuery("#"+myCanvas).attr('width',600);
                                           jQuery("#"+myCanvas).attr('height',1000);
                                       }
+                                      */
                                       };
                       image.src= this.result;
                       //box = {"xmin":0,"ymin":0,"xmax":jQuery("#"+'myCanvas').width(),"ymax":jQuery("#"+'myCanvas').height()};                         //createNewCanvas(this.result,'myCanvas',box);
