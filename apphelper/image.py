@@ -109,8 +109,8 @@ def read_voc_xml(p):
                  ymax = np.float(bndbox.find('ymax').text)
                  cx = (xmin+xmax)/2.0
                  cy = (ymin+ymax)/2.0
-                 w = (-xmin+xmax)/2.0
-                 h = (-ymin+ymax)/2.0
+                 w = (-xmin+xmax)#/2.0
+                 h = (-ymin+ymax)#/2.0
                  angle =0.0
             boxes.append({'cx':cx,'cy':cy,'w':w,'h':h,'angle':angle})
                     
