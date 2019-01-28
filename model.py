@@ -31,14 +31,13 @@ def text_detect(img,
                 LINE_MIN_SCORE=0.8,
                 TEXT_PROPOSALS_WIDTH=5,
                 MIN_NUM_PROPOSALS=1,
-                
                 ):
     boxes, scores = detect.text_detect(np.array(img))
 
         
     boxes = np.array(boxes,dtype=np.float32)
     scores = np.array(scores,dtype=np.float32)
-    textdetector  = TextDetector(MAX_HORIZONTAL_GAP,MIN_V_OVERLAPS,MIN_SIZE_SIM)
+    textdetector = TextDetector(MAX_HORIZONTAL_GAP,MIN_V_OVERLAPS,MIN_SIZE_SIM)
     shape = img.size[::-1]
     boxes = textdetector.detect(boxes,
                                 scores[:, np.newaxis],
