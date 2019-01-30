@@ -1,0 +1,54 @@
+Total time: 1660.47 s （Timer unit: 1e-06 s）
+File: text/opencv_dnn_detect_test.py
+Function: main at line 21
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+=======================================================================================================================
+    21                                           @profile
+    22                                           def main():
+    23         1          4.0      4.0      0.0      try:
+    24         1       4784.0   4784.0      0.0          print(FLAGS.output_dir)
+    25         1       4033.0   4033.0      0.0          image_dir = os.listdir(FLAGS.image_dir)
+    26      1768      28379.0     16.1      0.0          for pic in image_dir:
+    27      1767     133350.0     75.5      0.0              single_pic = os.path.join(FLAGS.image_dir, pic)
+    28      1767      71709.0     40.6      0.0              if os.path.isfile(single_pic) and pic.endswith(".jpg"):
+    29      1765 1368929178.0 775597.3     82.4                  im = transpose_img(single_pic)
+    30      1765     228015.0    129.2      0.0                  if FLAGS.output_dir:
+    31      1765      53870.0     30.5      0.0                      write_path = os.path.join(FLAGS.output_dir, pic)
+    32      1765   20456331.0  11590.0      1.2                      print("... write to [{}] ...".format(write_path))
+    33      1765       7377.0      4.2      0.0                      if isinstance(im, np.ndarray):
+    34       493    2432603.0   4934.3      0.1                          im = Image.fromarray(im)
+    35      1765  268120653.0 151909.7     16.1                      im.save(write_path)
+    36                                                       else:
+    37         2       1493.0    746.5      0.0                  print("... Jump pic {}...".format(single_pic))
+    38                                               except BaseException as bxp:
+    39                                                   traceback.print_exc()
+    40                                                   print("Exception : {}".format(bxp))
+
+Total time: 1344.49 s
+File: text/opencv_dnn_detect_test.py
+Function: transpose_img at line 43
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+=======================================================================================================================
+    43                                           @profile
+    44                                           def transpose_img(pic):
+    45      1765  185961444.0 105,360.6     13.8      img = Image.open(pic).convert("RGB")
+    46      1765      15833.0      9.0      0.0      w, h = img.size
+    47      1765   15587499.0   8831.4      1.2      im = np.array(img)
+    48      1765    2573514.0   1458.1      0.2      im_cp = np.copy(im)
+    49      1765 1129169041.0 639,755.8     84.0      angle = angle_detect(im_cp, False)
+    50      1765      80755.0     45.8      0.0      print("Angel : [{}]".format(angle))
+    51
+    52      1765       4121.0      2.3      0.0      if angle == 90:
+    53      1009    8691296.0   8,613.8     0.6          im = img.transpose(Image.ROTATE_90)
+    54       756        493.0      0.7      0.0      elif angle == 180:
+    55        59     430124.0   7,290.2     0.0          im = img.transpose(Image.ROTATE_180)
+    56       697        478.0      0.7      0.0      elif angle == 270:
+    57       204    1972342.0   9,668.3     0.1          im = img.transpose(Image.ROTATE_270)
+    58
+    59                                               # if ifadjustDegree:
+    60                                               #     degree = estimate_skew_angle(np.array(im.convert('L')))
+    61                                               # return angle, degree, im.rotate(degree)
+    62
+    63      1765       5100.0      2.9      0.0      return im
