@@ -1,0 +1,54 @@
+Total time: 304.27 s
+File: deploy/angle_translate_deploy.py
+Function: folder_tester at line 20
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    20                                           @profile
+    21                                           def folder_tester():
+    22         1          1.0      1.0      0.0      try:
+    23         1        200.0    200.0      0.0          print(FLAGS.output_dir)
+    24         1       1639.0   1639.0      0.0          image_dir = os.listdir(FLAGS.image_dir)
+    25      1767       6077.0      3.4      0.0          for pic in image_dir:
+    26      1766      95915.0     54.3      0.0              single_pic = os.path.join(FLAGS.image_dir, pic)
+    27      1766      47268.0     26.8      0.0              if os.path.isfile(single_pic) and pic.endswith(".jpg"):
+    28      1765  142562719.0  80772.1     46.9                  im = transpose_img(single_pic)
+    29      1765      85491.0     48.4      0.0                  if FLAGS.output_dir:
+    30      1765      71750.0     40.7      0.0                      write_path = os.path.join(FLAGS.output_dir, pic)
+    31      1765      57778.0     32.7      0.0                      print("... write to [{}] ...".format(write_path))
+    32      1765       7277.0      4.1      0.0                      if isinstance(im, np.ndarray):
+    33       494    2333470.0   4723.6      0.8                          im = Image.fromarray(im)
+    34      1765  159000537.0  90085.3     52.3                      im.save(write_path)
+    35                                                       else:
+    36         1         18.0     18.0      0.0                  print("... Jump pic {}...".format(single_pic))
+    37                                               except BaseException as bxp:
+    38                                                   traceback.print_exc()
+    39                                                   print("Exception : {}".format(bxp))
+
+Total time: 142.417 s
+File: deploy/angle_translate_deploy.py
+Function: transpose_img at line 42
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    42                                           @profile
+    43                                           def transpose_img(pic):
+    44      1765   81074433.0  45934.5     56.9      img = Image.open(pic).convert("RGB")
+    45      1765       5065.0      2.9      0.0      w, h = img.size
+    46      1765   10260681.0   5813.4      7.2      im = np.array(img)
+    47      1765     518976.0    294.0      0.4      im_cp = np.copy(im)
+    48      1765   37196458.0  21074.5     26.1      angle = angle_detect(im_cp, False)
+    49      1765      82257.0     46.6      0.1      print("Angel : [{}]".format(angle))
+    50
+    51      1765       2997.0      1.7      0.0      if angle == 90:
+    52      1008    9826084.0   9748.1      6.9          im = img.transpose(Image.ROTATE_90)
+    53       757        944.0      1.2      0.0      elif angle == 180:
+    54        59     345917.0   5863.0      0.2          im = img.transpose(Image.ROTATE_180)
+    55       698        915.0      1.3      0.0      elif angle == 270:
+    56       204    3098447.0  15188.5      2.2          im = img.transpose(Image.ROTATE_270)
+    57
+    58                                               # if ifadjustDegree:
+    59                                               #     degree = estimate_skew_angle(np.array(im.convert('L')))
+    60                                               # return angle, degree, im.rotate(degree)
+    61
+    62      1765       3649.0      2.1      0.0      return im
