@@ -59,7 +59,6 @@ def transpose_img(pic):
     # if ifadjustDegree:
     #     degree = estimate_skew_angle(np.array(im.convert('L')))
     # return angle, degree, im.rotate(degree)
-
     return im
 
 

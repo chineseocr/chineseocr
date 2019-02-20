@@ -1,0 +1,84 @@
+Total time: 36.7603 s
+Function: angle_detect_tf at line 52
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    52                                           @profile
+    53                                           def angle_detect_tf(img, adjust=True):
+    54                                               """
+    55                                               文字方向检测
+    56                                               """
+    57      1765       9339.0      5.3      0.0      h, w = img.shape[:2]
+    58      1765       3973.0      2.3      0.0      ROTATE = [0, 90, 180, 270]
+    59      1765       2544.0      1.4      0.0      if adjust:
+    60                                                   thesh = 0.05
+    61                                                   xmin, ymin, xmax, ymax = int(thesh * w), int(thesh * h), w - int(thesh * w), h - int(thesh * h)
+    62                                                   img = img[ymin:ymax, xmin:xmax]  ##剪切图片边缘
+    63      1765    1532924.0    868.5      4.2      img = cv2.resize(img, (224, 224))
+    64      1765     893368.0    506.2      2.4      img = img[..., ::-1].astype(np.float32)
+    65
+    66      1765     184563.0    104.6      0.5      img[..., 0] -= 103.939
+    67      1765     124295.0     70.4      0.3      img[..., 1] -= 116.779
+    68      1765     120570.0     68.3      0.3      img[..., 2] -= 123.68
+    69      1765     217256.0    123.1      0.6      img = np.array([img])
+    70
+    71      1765   33631162.0  19054.5     91.5      out = sess.run(predictions, feed_dict={inputImg: img, keep_prob: 0})
+    72
+    73      1765      36063.0     20.4      0.1      index = np.argmax(out, axis=1)[0]
+    74      1765       4215.0      2.4      0.0      return ROTATE[index]
+
+Total time: 298.085 s
+File: deploy/angle_translate_deploy.py
+Function: folder_tester at line 20
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    20                                           @profile
+    21                                           def folder_tester():
+    22         1          2.0      2.0      0.0      try:
+    23         1        324.0    324.0      0.0          print(FLAGS.output_dir)
+    24         1       1576.0   1576.0      0.0          image_dir = os.listdir(FLAGS.image_dir)
+    25      1767       6233.0      3.5      0.0          for pic in image_dir:
+    26      1766     103218.0     58.4      0.0              single_pic = os.path.join(FLAGS.image_dir, pic)
+    27      1766       4340.0      2.5      0.0              pic_flag = True if pic.endswith(".jpg") or pic.endswith(".png") or pic.endswith(".jpeg") else False
+    28      1766      52026.0     29.5      0.0              if os.path.isfile(single_pic) and pic_flag:
+    29      1765  138501299.0  78471.0     46.5                  im = transpose_img(single_pic)
+    30      1765      77854.0     44.1      0.0                  if FLAGS.output_dir:
+    31      1765      68644.0     38.9      0.0                      write_path = os.path.join(FLAGS.output_dir, pic)
+    32      1765      53522.0     30.3      0.0                      print("... write to [{}] ...".format(write_path))
+    33      1765       5557.0      3.1      0.0                      if isinstance(im, np.ndarray):
+    34       494    2085824.0   4222.3      0.7                          im = Image.fromarray(im)
+    35      1765  157124973.0  89022.6     52.7                      im.save(write_path)
+    36                                                       else:
+    37         1         15.0     15.0      0.0                  print("... Jump pic {}...".format(single_pic))
+    38                                               except BaseException as bxp:
+    39                                                   traceback.print_exc()
+    40                                                   print("Exception : {}".format(bxp))
+
+Total time: 138.379 s
+File: deploy/angle_translate_deploy.py
+Function: transpose_img at line 43
+
+Line #      Hits         Time  Per Hit   % Time  Line Contents
+==============================================================
+    43                                           @profile
+    44                                           def transpose_img(pic):
+    45      1765   79726931.0  45171.1     57.6      img = Image.open(pic).convert("RGB")
+    46      1765       5026.0      2.8      0.0      w, h = img.size
+    47      1765    9593709.0   5435.5      6.9      im = np.array(img)
+    48      1765     510084.0    289.0      0.4      im_cp = np.copy(im)
+    49      1765   36858913.0  20883.2     26.6      angle = angle_detect(im_cp, False)
+    50      1765      74154.0     42.0      0.1      print("Angel : [{}]".format(angle))
+    51
+    52      1765       2792.0      1.6      0.0      if angle == 90:
+    53      1008    8562210.0   8494.3      6.2          im = img.transpose(Image.ROTATE_90)
+    54       757        904.0      1.2      0.0      elif angle == 180:
+    55        59     292050.0   4950.0      0.2          im = img.transpose(Image.ROTATE_180)
+    56       698       1015.0      1.5      0.0      elif angle == 270:
+    57       204    2747539.0  13468.3      2.0          im = img.transpose(Image.ROTATE_270)
+    58
+    59                                               # if ifadjustDegree:
+    60                                               #     degree = estimate_skew_angle(np.array(im.convert('L')))
+    61                                               # return angle, degree, im.rotate(degree)
+    62
+    63      1765       3457.0      2.0      0.0      return im

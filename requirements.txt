@@ -16,3 +16,4 @@ pika
 matplotlib
 lxml
 bs4
+cv2
