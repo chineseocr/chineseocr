@@ -4,7 +4,7 @@ pwd = os.getcwd()
 import numpy as np
 from PIL import Image
 
-from config import yoloCfg,yoloWeights,yoloData,yoloData,darknetRoot,GPU,GPUID
+from config import yoloCfg,yoloWeights,yoloData,darknetRoot,GPU,GPUID
 os.chdir(darknetRoot)
 sys.path.append('python')
 import darknet as dn
