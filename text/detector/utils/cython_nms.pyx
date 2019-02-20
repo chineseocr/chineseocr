@@ -22,7 +22,7 @@ def nms(np.ndarray[np.float32_t, ndim=2] dets, np.float thresh):
     cdef np.ndarray[np.float32_t, ndim=1] scores = dets[:, 4]
 
     cdef np.ndarray[np.float32_t, ndim=1] areas = (x2 - x1 + 1) * (y2 - y1 + 1)
-    cdef np.ndarray[np.int_t, ndim=1] order = scores.argsort()[::-1]
+    cdef np.ndarray[np.int64_t, ndim=1] order = scores.argsort()[::-1]
 
     cdef int ndets = dets.shape[0]
     cdef np.ndarray[np.int_t, ndim=1] suppressed = \
@@ -31,7 +31,7 @@ def nms(np.ndarray[np.float32_t, ndim=2] dets, np.float thresh):
     # nominal indices
     cdef int _i, _j
     # sorted indices
-    cdef int i, j
+    cdef np.int64_t i, j
     # temp variables for box i's (the box currently under consideration)
     cdef np.float32_t ix1, iy1, ix2, iy2, iarea
     # variables for computing overlap with box j (lower scoring box)
