@@ -107,17 +107,16 @@ def read_voc_xml(p):
                 angle, w, h, cx, cy = solve([x1, y1, x2, y2, x3, y3, x4, y4])
 
             else:
-                xmin = np.float(bndbox.find('xmin').text)
-                xmax = np.float(bndbox.find('xmax').text)
-                ymin = np.float(bndbox.find('ymin').text)
-                ymax = np.float(bndbox.find('ymax').text)
-                cx = (xmin + xmax) / 2.0
-                cy = (ymin + ymax) / 2.0
-                w = (-xmin + xmax) / 2.0
-                h = (-ymin + ymax) / 2.0
-                angle = 0.0
-            boxes.append({'cx': cx, 'cy': cy, 'w': w, 'h': h, 'angle': angle})
-
+                boxes.append({'cx': cx, 'cy': cy, 'w': w, 'h': h, 'angle': angle})
+                 xmin = np.float(bndbox.find('xmin').text)
+                 xmax = np.float(bndbox.find('xmax').text)
+                 ymin = np.float(bndbox.find('ymin').text)
+                 ymax = np.float(bndbox.find('ymax').text)
+                 cx = (xmin+xmax)/2.0
+                 cy = (ymin+ymax)/2.0
+                 w = (-xmin+xmax)#/2.0
+                 h = (-ymin+ymax)#/2.0
+                 angle =0.0
     return boxes
 
 
