@@ -1,27 +1,49 @@
 #coding:utf-8
 import numpy as np
-from config import GPUID,GPU
-from text.detector.utils.cython_nms import nms as cython_nms
+from config import GPUID,GPU,nmsFlag
+from text.detector.utils.python_nms import nms as python_nms ##python版本nms
+
 from text.detector.text_proposal_connector import TextProposalConnector
 
-##优先加载编译对GPU编译的gpu_nms 如果不想调用GPU，在程序启动执行os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-if GPU:
+
+##优先加载编译对GPU编译的gpu_nms
+
+if nmsFlag=='gpu' and GPU and GPUID is not None:
     try:
-        from detector.utils.gpu_nms import gpu_nms
+        from text.detector.utils.gpu_nms import gpu_nms
     except:
-        gpu_nms =cython_nms
+            gpu_nms = None
+    cython_nms = None
+
+elif nmsFlag=='python':
+     gpu_nms ==None
+     cython_nms = None
+
+elif nmsFlag=='cython':
+    try:
+        from text.detector.utils.cython_nms  import nms as  cython_nms
+    except:
+         cython_nms = None
+    gpu_nms ==None
+else:
+    gpu_nms =None
+    cython_nms = None
+
+print("Nms engine gpu_nms:",gpu_nms,",cython_nms:",cython_nms,",python_nms:",python_nms)
+
 
 def nms(dets, thresh):
     if dets.shape[0] == 0:
         return []
     
-    try:
-        if GPU and GPUID is not None:
-            return gpu_nms(dets, thresh, device_id=GPUID)
-    except:
-        pass
+    if  gpu_nms is not None and GPUID is not None:
+        return gpu_nms(dets, thresh, device_id=GPUID)
 
-    return cython_nms(dets, thresh)
+    elif  cython_nms is not None:
+          return cython_nms(dets, thresh)
+    else:
+          return python_nms(dets, thresh, method='Union')
+
 
 def normalize(data):
     if data.shape[0]==0:

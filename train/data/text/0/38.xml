@@ -1,7 +1,7 @@
-<annotation>
-  <path>TB1HixALXXXXXcDXFXXunYpLFXX.txt</path>
-  <folder/>
-  <filename>TB1HixALXXXXXcDXFXXunYpLFXX</filename>
+<annotation verified="no">
+  <folder>0</folder>
+  <filename>38</filename>
+  <path>/Users/lywen/Desktop/2019/git/chineseocr/train/data/text/0/38.jpg</path>
   <source>
     <database>Unknown</database>
   </source>
@@ -10,7 +10,7 @@
     <height>1000</height>
     <depth>3</depth>
   </size>
-  <segmented>segmented</segmented>
+  <segmented>0</segmented>
   <object>
     <type>robndbox</type>
     <name>Doncraticc</name>
@@ -90,9 +90,9 @@
     <robndbox>
       <cx>380.3175</cx>
       <cy>421.25</cy>
-      <w>568.3120114786925</w>
-      <h>121.28492489920953</h>
-      <angle>-0.5002</angle>
+      <w>568.312</w>
+      <h>121.2849</h>
+      <angle>2.641393</angle>
     </robndbox>
   </object>
   <object>
@@ -104,9 +104,9 @@
     <robndbox>
       <cx>296.255</cx>
       <cy>239.375</cy>
-      <w>381.74423068997464</w>
-      <h>49.24577043321813</h>
-      <angle>-0.5041</angle>
+      <w>381.7442</w>
+      <h>49.2458</h>
+      <angle>2.637493</angle>
     </robndbox>
   </object>
   <object>
@@ -120,7 +120,7 @@
       <cy>235.625</cy>
       <w>10.0</w>
       <h>13.75</h>
-      <angle>-0.0</angle>
+      <angle>0.0</angle>
     </robndbox>
   </object>
   <object>
@@ -132,9 +132,9 @@
     <robndbox>
       <cx>14.38</cx>
       <cy>350.625</cy>
-      <w>9.999999999999998</w>
+      <w>10.0</w>
       <h>13.75</h>
-      <angle>-0.0</angle>
+      <angle>0.0</angle>
     </robndbox>
   </object>
   <object>
@@ -146,7 +146,7 @@
     <robndbox>
       <cx>18.13</cx>
       <cy>465.625</cy>
-      <w>9.999999999999998</w>
+      <w>10.0</w>
       <h>16.25</h>
       <angle>0.0</angle>
     </robndbox>
@@ -160,7 +160,7 @@
     <robndbox>
       <cx>20.63</cx>
       <cy>574.375</cy>
-      <w>9.999999999999998</w>
+      <w>10.0</w>
       <h>13.75</h>
       <angle>0.0</angle>
     </robndbox>
@@ -186,11 +186,11 @@
     <truncated>0</truncated>
     <difficult>0</difficult>
     <robndbox>
-      <cx>27.505000000000003</cx>
+      <cx>27.505</cx>
       <cy>792.5</cy>
-      <w>11.250000000000004</w>
+      <w>11.25</w>
       <h>17.5</h>
-      <angle>-0.0</angle>
+      <angle>0.0</angle>
     </robndbox>
   </object>
   <object>
@@ -200,11 +200,11 @@
     <truncated>0</truncated>
     <difficult>0</difficult>
     <robndbox>
-      <cx>441.5675</cx>
-      <cy>651.875</cy>
-      <w>689.5057338499287</w>
-      <h>45.48171011220245</h>
-      <angle>-0.4969</angle>
+      <cx>436.8746</cx>
+      <cy>652.5505</cy>
+      <w>685.0737</w>
+      <h>61.0579</h>
+      <angle>2.624693</angle>
     </robndbox>
   </object>
   <object>

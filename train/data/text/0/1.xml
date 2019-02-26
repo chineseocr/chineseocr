@@ -1,7 +1,7 @@
-<annotation>
-  <path>TB1gtMnFVXXXXXhXXXXXXXXXXXX_!!0-item_pic.jpg.txt</path>
-  <folder/>
-  <filename>TB1gtMnFVXXXXXhXXXXXXXXXXXX_!!0-item_pic</filename>
+<annotation verified="no">
+  <folder>0</folder>
+  <filename>1</filename>
+  <path>/Users/lywen/Desktop/2019/git/chineseocr/train/data/text/0/1.jpg</path>
   <source>
     <database>Unknown</database>
   </source>
@@ -10,7 +10,7 @@
     <height>700</height>
     <depth>3</depth>
   </size>
-  <segmented>segmented</segmented>
+  <segmented>0</segmented>
   <object>
     <type>robndbox</type>
     <name>&#20080;&#22909;&#28783;&#183;&#27431;&#38597;&#30331;</name>
@@ -20,9 +20,9 @@
     <robndbox>
       <cx>123.4325</cx>
       <cy>24.205</cy>
-      <w>245.01755881838943</w>
-      <h>40.282290056006744</h>
-      <angle>-0.014</angle>
+      <w>245.0176</w>
+      <h>40.2823</h>
+      <angle>3.127593</angle>
     </robndbox>
   </object>
   <object>
@@ -32,10 +32,10 @@
     <truncated>0</truncated>
     <difficult>0</difficult>
     <robndbox>
-      <cx>126.64000000000001</cx>
+      <cx>126.64</cx>
       <cy>190.8675</cy>
-      <w>193.08696595224302</w>
-      <h>60.7164261403712</h>
+      <w>193.087</w>
+      <h>60.7164</h>
       <angle>0.0107</angle>
     </robndbox>
   </object>
@@ -48,9 +48,9 @@
     <robndbox>
       <cx>122.555</cx>
       <cy>255.325</cy>
-      <w>124.37025532870348</w>
-      <h>61.51392290231571</h>
-      <angle>-0.0689</angle>
+      <w>124.3703</w>
+      <h>61.5139</h>
+      <angle>3.072693</angle>
     </robndbox>
   </object>
   <object>
@@ -60,10 +60,10 @@
     <truncated>0</truncated>
     <difficult>0</difficult>
     <robndbox>
-      <cx>127.22500000000001</cx>
+      <cx>127.225</cx>
       <cy>469.115</cy>
       <w>211.75</w>
-      <h>48.036208201197006</h>
+      <h>48.0362</h>
       <angle>0.005</angle>
     </robndbox>
   </object>
@@ -77,7 +77,7 @@
       <cx>128.68</cx>
       <cy>528.615</cy>
       <w>220.5</w>
-      <h>40.829999999999984</h>
+      <h>40.83</h>
       <angle>0.0</angle>
     </robndbox>
   </object>
@@ -90,9 +90,9 @@
     <robndbox>
       <cx>228.7275</cx>
       <cy>624.575</cy>
-      <w>438.09511011073505</w>
-      <h>72.15168717348092</h>
-      <angle>-0.0031</angle>
+      <w>438.0951</w>
+      <h>72.1517</h>
+      <angle>3.138493</angle>
     </robndbox>
   </object>
   <object>
@@ -104,9 +104,9 @@
     <robndbox>
       <cx>502.6</cx>
       <cy>600.95</cy>
-      <w>23.339999999999975</w>
+      <w>23.34</w>
       <h>24.5</h>
-      <angle>-0.0</angle>
+      <angle>0.0</angle>
     </robndbox>
   </object>
   <object>
@@ -117,10 +117,10 @@
     <difficult>0</difficult>
     <robndbox>
       <cx>567.06</cx>
-      <cy>582.2850000000001</cy>
-      <w>105.57999999999998</w>
-      <h>78.27892331726943</h>
-      <angle>-0.0007</angle>
+      <cy>582.285</cy>
+      <w>105.58</w>
+      <h>78.2789</h>
+      <angle>3.140893</angle>
     </robndbox>
   </object>
   <object>
@@ -147,7 +147,7 @@
       <cx>669.43</cx>
       <cy>621.95</cy>
       <w>35.0</w>
-      <h>29.159999999999968</h>
+      <h>29.16</h>
       <angle>0.0</angle>
     </robndbox>
   </object>
@@ -159,10 +159,10 @@
     <difficult>0</difficult>
     <robndbox>
       <cx>579.31</cx>
-      <cy>654.0350000000001</cy>
-      <w>97.41999999999996</w>
-      <h>30.4306387026551</h>
-      <angle>-0.0009</angle>
+      <cy>654.035</cy>
+      <w>97.42</w>
+      <h>30.4306</h>
+      <angle>3.140693</angle>
     </robndbox>
   </object>
   <object>
@@ -174,9 +174,9 @@
     <robndbox>
       <cx>540.225</cx>
       <cy>495.3675</cy>
-      <w>69.47941704817234</w>
-      <h>20.536039296816206</h>
-      <angle>-0.3678</angle>
+      <w>69.4794</w>
+      <h>20.536</h>
+      <angle>2.773793</angle>
     </robndbox>
   </object>
   <object>
@@ -188,9 +188,9 @@
     <robndbox>
       <cx>619.265</cx>
       <cy>496.4225</cy>
-      <w>22.774086335060105</w>
-      <h>75.14815074708979</h>
-      <angle>-0.5491</angle>
+      <w>22.7741</w>
+      <h>75.1482</h>
+      <angle>2.092493</angle>
     </robndbox>
   </object>
   <object>
