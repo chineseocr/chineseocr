@@ -13,6 +13,8 @@ from train.text.utils import get_random_data_ as get_random_data
 from keras.optimizers import Adam
 from train.text.gen_anchors import YOLO_Kmeans## anchors生产
 from apphelper.image import xy_rotate_box, box_rotate
+from keras.callbacks import EarlyStopping, ModelCheckpoint, LearningRateScheduler, TensorBoard
+
 
 
 # os.chdir('../../')
@@ -77,7 +79,10 @@ def data_generator(roots, anchors, num_classes, splitW):
 
 
 val_split = 0.1
-root='train/data/text/*/*.[j|p]*'
+# root='train/data/text/*/*.[j|p]*'
+# root='/home/super/桌面/generate_data/ticket_pro/output/tickets_0/*.[j|p]*'
+root='/dockershare/hmb_tickets_data/templet_mix/*/*.[j|p]*'
+
 jpgPath = glob(root)
 np.random.shuffle(jpgPath)
 num_val = int(len(jpgPath)*val_split)
@@ -148,9 +153,8 @@ def show(p, scale=608):
                                     rorateDegree=rorateDegree)
     return plot_boxes(im, 0, boxes, color=(0, 0, 0)), plot_box(newIm, newBoxes), newBoxes
 
-
 # a, b, newBoxes = show(jpgPath[10])
-
+# exit(1)
 
 #anchors = cluster.anchors
 anchors = '8,9, 8,18, 8,31, 8,59, 8,124, 8,351, 8,509, 8,605, 8,800'
@@ -160,27 +164,38 @@ num_anchors = len(anchors)
 class_names = ['none','text',]##text
 num_classes = len(class_names)
 textModel = yolo_text(num_classes,anchors,train=True)
-textModel.load_weights('models/text.h5',skip_mismatch=True)##加载预训练模型权重
+textModel.load_weights('models/text.h5', skip_mismatch=True)##加载预训练模型权重
 
-trainLoad = data_generator(jpgPath[:num_train], anchors, num_classes,splitW)
-testLoad  = data_generator(jpgPath[num_train:], anchors, num_classes,splitW)
-
-
+trainLoad = data_generator(jpgPath[:num_train], anchors, num_classes, splitW)
+testLoad = data_generator(jpgPath[num_train:], anchors, num_classes, splitW)
 
 adam = Adam(lr=0.00001)
 textModel.compile(optimizer=adam, loss={'xy_loss':lambda y_true, y_pred:y_pred,
                                         'wh_loss':lambda y_true, y_pred:y_pred,
                                         'confidence_loss':lambda y_true, y_pred:y_pred,
                                         'class_loss':lambda y_true, y_pred:y_pred,
-                                   }
-                                    )
+                                   })
+
+checkpoint = ModelCheckpoint(filepath='./train/models/weights_densenet_s500-{epoch:02d}-{val_confidence_loss_loss:.2f}.h5',
+                             monitor='confidence_loss_loss', save_best_only=False, save_weights_only=True)
+tensorboard = TensorBoard(log_dir='./train/models/logs', write_graph=True)
 
 textModel.fit_generator(generator=trainLoad,
-                         steps_per_epoch=num_train,
-                         epochs=10,
-                         verbose=1,
-                         callbacks=None,
-                         validation_data=testLoad,
-                         validation_steps=num_val)
+                        steps_per_epoch=num_train,
+                        epochs=10,
+                        initial_epoch = 0,
+                        verbose=1,
+                        validation_data=testLoad,
+                        validation_steps=num_val,
+                        callbacks=[checkpoint, tensorboard])
 
-textModel.save_weights('./train/text.h5')  # 保存模型
+# textModel.fit_generator(generator=trainLoad,
+#                         steps_per_epoch=1,
+#                         epochs=10,
+#                         initial_epoch = 0,
+#                         verbose=1,
+#                         validation_data=testLoad,
+#                         validation_steps=1,
+#                         callbacks=[checkpoint, tensorboard])
+
+# textModel.save_weights('./train/text.h5')  # 保存模型
