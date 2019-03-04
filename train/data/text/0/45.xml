@@ -1,7 +1,7 @@
 <annotation verified="no">
   <folder>0</folder>
   <filename>45</filename>
-  <path>/Users/lywen/Desktop/data/ocr/mtwi_2018_train/data/0/45.jpg</path>
+  <path>/Users/lywen/Desktop/2019/git/chineseocr/train/data/text/0/45.jpg</path>
   <source>
     <database>Unknown</database>
   </source>
@@ -172,10 +172,10 @@
     <truncated>0</truncated>
     <difficult>0</difficult>
     <robndbox>
-      <cx>89.3325</cx>
-      <cy>222.3325</cy>
-      <w>79.9806</w>
-      <h>161.5063</h>
+      <cx>111.2134</cx>
+      <cy>221.834</cy>
+      <w>123.6691</w>
+      <h>158.7844</h>
       <angle>3.056593</angle>
     </robndbox>
   </object>
@@ -186,11 +186,11 @@
     <truncated>0</truncated>
     <difficult>0</difficult>
     <robndbox>
-      <cx>156.0</cx>
-      <cy>227.3325</cy>
+      <cx>153.0</cx>
+      <cy>223.3325</cy>
       <w>144.3681</w>
       <h>41.9244</h>
-      <angle>1.814993</angle>
+      <angle>2.114993</angle>
     </robndbox>
   </object>
   <object>
@@ -200,10 +200,10 @@
     <truncated>0</truncated>
     <difficult>0</difficult>
     <robndbox>
-      <cx>110.335</cx>
-      <cy>572.0</cy>
-      <w>59.0023</w>
-      <h>119.9485</h>
+      <cx>125.4711</cx>
+      <cy>565.8364</cy>
+      <w>90.1845</w>
+      <h>129.7484</h>
       <angle>3.059393</angle>
     </robndbox>
   </object>
@@ -218,7 +218,7 @@
       <cy>574.6675</cy>
       <w>106.3642</w>
       <h>33.0946</h>
-      <angle>1.709193</angle>
+      <angle>2.009193</angle>
     </robndbox>
   </object>
   <object>
@@ -284,10 +284,10 @@
     <truncated>0</truncated>
     <difficult>0</difficult>
     <robndbox>
-      <cx>494.0</cx>
-      <cy>356.0</cy>
-      <w>84.5515</w>
-      <h>36.1542</h>
+      <cx>499.0008</cx>
+      <cy>340.6207</cy>
+      <w>100.2019</w>
+      <h>64.4594</h>
       <angle>2.950893</angle>
     </robndbox>
   </object>
@@ -298,10 +298,10 @@
     <truncated>0</truncated>
     <difficult>0</difficult>
     <robndbox>
-      <cx>471.0025</cx>
-      <cy>188.335</cy>
-      <w>106.2029</w>
-      <h>26.4265</h>
+      <cx>474.9222</cx>
+      <cy>172.2472</cy>
+      <w>119.1751</w>
+      <h>56.897</h>
       <angle>2.978093</angle>
     </robndbox>
   </object>
@@ -312,10 +312,10 @@
     <truncated>0</truncated>
     <difficult>0</difficult>
     <robndbox>
-      <cx>577.0</cx>
-      <cy>175.3325</cy>
-      <w>78.4367</w>
-      <h>29.8075</h>
+      <cx>578.8764</cx>
+      <cy>161.1454</cy>
+      <w>90.1334</w>
+      <h>55.9297</h>
       <angle>2.852093</angle>
     </robndbox>
   </object>
@@ -326,10 +326,10 @@
     <truncated>0</truncated>
     <difficult>0</difficult>
     <robndbox>
-      <cx>399.6675</cx>
-      <cy>510.665</cy>
-      <w>80.0877</w>
-      <h>31.2474</h>
+      <cx>404.2796</cx>
+      <cy>495.666</cy>
+      <w>95.027</w>
+      <h>58.8478</h>
       <angle>2.943793</angle>
     </robndbox>
   </object>
@@ -340,10 +340,10 @@
     <truncated>0</truncated>
     <difficult>0</difficult>
     <robndbox>
-      <cx>374.0</cx>
-      <cy>372.0</cy>
-      <w>121.5065</w>
-      <h>28.1287</h>
+      <cx>374.7026</cx>
+      <cy>351.793</cy>
+      <w>127.6518</w>
+      <h>68.0975</h>
       <angle>3.023793</angle>
     </robndbox>
   </object>
@@ -354,10 +354,10 @@
     <truncated>0</truncated>
     <difficult>0</difficult>
     <robndbox>
-      <cx>282.6675</cx>
-      <cy>524.6675</cy>
-      <w>120.2035</w>
-      <h>29.458</h>
+      <cx>281.9054</cx>
+      <cy>507.4358</cy>
+      <w>122.761</w>
+      <h>63.8601</h>
       <angle>3.023193</angle>
     </robndbox>
   </object>
@@ -410,10 +410,10 @@
     <truncated>0</truncated>
     <difficult>0</difficult>
     <robndbox>
-      <cx>590.6675</cx>
-      <cy>339.6675</cy>
-      <w>66.5915</w>
-      <h>52.3479</h>
+      <cx>597.3903</cx>
+      <cy>335.1766</cy>
+      <w>81.9658</w>
+      <h>57.3565</h>
       <angle>2.867593</angle>
     </robndbox>
   </object>
@@ -424,10 +424,10 @@
     <truncated>0</truncated>
     <difficult>0</difficult>
     <robndbox>
-      <cx>487.6675</cx>
-      <cy>492.665</cy>
-      <w>62.5093</w>
-      <h>53.2837</h>
+      <cx>492.4996</cx>
+      <cy>490.4574</cy>
+      <w>72.8996</w>
+      <h>55.5042</h>
       <angle>2.923593</angle>
     </robndbox>
   </object>
@@ -583,6 +583,20 @@
       <w>74.0</w>
       <h>72.0</h>
       <angle>0.0</angle>
+    </robndbox>
+  </object>
+  <object>
+    <type>robndbox</type>
+    <name>Cake</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <robndbox>
+      <cx>510.9222</cx>
+      <cy>124.2472</cy>
+      <w>94.5186</w>
+      <h>54.8835</h>
+      <angle>2.978093</angle>
     </robndbox>
   </object>
 </annotation>

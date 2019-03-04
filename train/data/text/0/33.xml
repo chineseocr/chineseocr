@@ -1,7 +1,7 @@
 <annotation verified="no">
   <folder>0</folder>
   <filename>33</filename>
-  <path>/Users/lywen/Desktop/data/ocr/mtwi_2018_train/data/0/33.jpg</path>
+  <path>/Users/lywen/Desktop/2019/git/chineseocr/train/data/text/0/33.jpg</path>
   <source>
     <database>Unknown</database>
   </source>
@@ -144,11 +144,11 @@
     <truncated>0</truncated>
     <difficult>0</difficult>
     <robndbox>
-      <cx>99.1975</cx>
-      <cy>138.405</cy>
-      <w>34.4234</w>
-      <h>108.2595</h>
-      <angle>0.0217</angle>
+      <cx>82.6748</cx>
+      <cy>119.2575</cy>
+      <w>23.6922</w>
+      <h>67.8088</h>
+      <angle>2.903293</angle>
     </robndbox>
   </object>
   <object>
@@ -204,7 +204,7 @@
       <cy>59.5975</cy>
       <w>20.621</w>
       <h>58.075</h>
-      <angle>0.2316</angle>
+      <angle>2.473193</angle>
     </robndbox>
   </object>
   <object>
@@ -485,6 +485,34 @@
       <w>103.0</w>
       <h>70.0</h>
       <angle>0.0</angle>
+    </robndbox>
+  </object>
+  <object>
+    <type>robndbox</type>
+    <name>ChinaGreen</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <robndbox>
+      <cx>108.6748</cx>
+      <cy>157.2575</cy>
+      <w>23.6922</w>
+      <h>67.8088</h>
+      <angle>2.303293</angle>
+    </robndbox>
+  </object>
+  <object>
+    <type>robndbox</type>
+    <name>24</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <robndbox>
+      <cx>675.5466</cx>
+      <cy>190.4009</cy>
+      <w>38.9369</w>
+      <h>88.4707</h>
+      <angle>2.331493</angle>
     </robndbox>
   </object>
 </annotation>

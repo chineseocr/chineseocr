@@ -18,7 +18,8 @@ elif opencvFlag=='darknet':
 else:
     ## keras版本文字检测
     from text import keras_detect as detect
-    
+
+print("Text detect engine:{}".format(opencvFlag))
 
 def text_detect(img,
                 MAX_HORIZONTAL_GAP=30,
@@ -34,8 +35,6 @@ def text_detect(img,
                 
                 ):
     boxes, scores = detect.text_detect(np.array(img))
-
-        
     boxes = np.array(boxes,dtype=np.float32)
     scores = np.array(scores,dtype=np.float32)
     textdetector  = TextDetector(MAX_HORIZONTAL_GAP,MIN_V_OVERLAPS,MIN_SIZE_SIM)
