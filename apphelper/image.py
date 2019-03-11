@@ -525,3 +525,67 @@ def get_boxes( bboxes):
     return text_recs
 
 
+
+def union_rbox(result,alpha=0.1):
+    """
+    按行合并box
+    """            
+    def diff(box1,box2):
+        """
+        计算box1,box2之间的距离
+        """
+        cy1 = box1['cy']
+        cy2 = box2['cy']
+        h1  = box1['h']
+        h2 = box2['h']
+        
+        return abs(cy1-cy2)/max(0.01,min(h1/2,h1/2))
+    
+    def sort_group_box(boxes):
+        """
+        对box进行排序, 并合并box
+        """   
+        N = len(boxes)
+        boxes = sorted(boxes,key=lambda x:x['cx'])
+        text  = ' '.join([bx['text'] for bx in boxes])
+        box4 = np.zeros((N,8))
+        for i in range(N):
+            cx =boxes[i]['cx']
+            cy = boxes[i]['cy']
+            degree =boxes[i]['degree']
+            w  = boxes[i]['w']
+            h = boxes[i]['h']
+            x1,y1,x2,y2,x3,y3,x4,y4 = xy_rotate_box(cx, cy, w, h, degree/180*np.pi)
+            box4[i] = [x1,y1,x2,y2,x3,y3,x4,y4]
+            
+        x1 = box4[:,0].min()
+        y1 = box4[:,1].min()
+        x2 = box4[:,2].max()
+        y2 = box4[:,3].min()
+        x3 = box4[:,4].max()
+        y3 = box4[:,5].max()
+        x4 = box4[:,6].min()
+        y4 = box4[:,7].max()
+        angle,w,h,cx,cy = solve([x1,y1,x2,y2,x3,y3,x4,y4])
+        return {'text':text,'cx':cx,'cy':cy,'w':w,'h':h,'degree':angle/np.pi*180}
+    
+    
+
+    newBox = []
+    for line in result:
+        if len(newBox)==0:
+            newBox.append([line])
+        else:
+            check=False
+            for box in newBox[-1]:
+                if diff(line,box)>alpha:
+                    check = True
+                    
+            if not check:
+                newBox[-1].append(line)
+            else:
+                newBox.append([line])
+    newBox = [sort_group_box(bx) for bx in newBox]
+    return newBox
+            
+

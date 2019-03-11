@@ -13,6 +13,11 @@ web.config.debug  = True
 import model
 render = web.template.render('templates', base='base')
 from config import DETECTANGLE
+from apphelper.image import union_rbox
+from application import trainTicket,idcard 
+
+
+billList = ['通用OCR','火车票','身份证']
 
 class OCR:
     """通用OCR识别"""
@@ -25,11 +30,13 @@ class OCR:
         post['width'] = 600
         post['W'] = 600
         post['uuid'] = uuid.uuid1().__str__()
+        post['billList'] = billList
         return render.ocr(post)
 
     def POST(self):
         data = web.data()
         data = json.loads(data)
+        billModel = data.get('billModel','')
         imgString = data['imgString'].encode().split(b';base64,')[-1]
         imgString = base64.b64decode(imgString)
         jobid = uuid.uuid1().__str__()
@@ -58,13 +65,29 @@ class OCR:
                                     ifadjustDegree=False##是否先小角度调整文字倾斜角度
                                    )
         
+        
+        
+        if billModel=='' or billModel=='通用OCR' :
+            result = union_rbox(result,0.2)
+            res = [{'text':x['text'],'name':str(i)} for i,x in enumerate(result)]
+        elif billModel=='火车票':
+            res = trainTicket.trainTicket(result)
+            res = res.res
+            res =[ {'text':res[key],'name':key} for key in res]
+            
+        elif billModel=='身份证':
+            
+            res = idcard.idcard(result)
+            res = res.res
+            res =[ {'text':res[key],'name':key} for key in res]
+            
+        
         timeTake = time.time()-timeTake
-        res = map(lambda x:{'w':x['w'],'h':x['h'],'cx':x['cx'],'cy':x['cy'],'degree':x['degree'],'text':x['text']}, result)
-        res = list(res)
-
+         
+        
         os.remove(path)
         return json.dumps({'res':res,'timeTake':round(timeTake,4)},ensure_ascii=False)
-
+        
 
 
 

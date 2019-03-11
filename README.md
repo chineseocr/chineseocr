@@ -4,7 +4,7 @@
 - [x]  文字方向检测 0、90、180、270度检测（支持dnn/tensorflow） 
 - [x]  支持(darknet/opencv dnn /keras)文字检测,暂时公布（keras版本训练）
 - [x]  不定长OCR训练(英文、中英文) crnn\dense ocr 
-
+- [x]  新增对身份证/火车票结构化数据识别
 
 ## 环境部署
 
@@ -45,11 +45,11 @@ ipython app.py 8080 ##8080端口号，可以设置任意端口
 
 ## 识别结果展示
 
-<img width="500" height="300" src="https://github.com/chineseocr/chineseocr/blob/master/test/img1.png"/>
-<img width="500" height="300" src="https://github.com/chineseocr/chineseocr/blob/master/test/4.png"/>
+<img width="500" height="300" src="https://github.com/chineseocr/chineseocr/blob/master/test/train1/png"/>
 <img width="500" height="300" src="https://github.com/chineseocr/chineseocr/blob/master/test/card1.png"/>
+<img width="500" height="300" src="https://github.com/chineseocr/chineseocr/blob/master/test/demo2.png"/>
 
-## Play with Docker Container
+## Play with Docker Container(镜像有些滞后)
 ``` Bash
 docker pull zergmk2/chineseocr
 docker run -d -p 8080:8080 zergmk2/chineseocr
@@ -58,7 +58,7 @@ docker run -d -p 8080:8080 zergmk2/chineseocr
 ## 访问服务
 http://127.0.0.1:8080/ocr
 
-<img width="500" height="300" src="https://github.com/chineseocr/chineseocr/blob/master/test/demo.png"/>
+<img width="500" height="300" src="https://github.com/chineseocr/chineseocr/blob/master/test/demo1.png"/>
 
 
 ## 参考

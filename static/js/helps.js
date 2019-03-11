@@ -5,10 +5,11 @@ function postImg(){
          if(imgJson['num']==0)
          {   loadingGif('loadingGif');
              imgJson['num']=1;//防止重复提交
+          //alert(imgJson["billModel"]);
         jQuery.ajax({
             type: "post",
             url: 'ocr',
-            data:JSON.stringify({"imgString":imgJson["imgString"]}),
+            data:JSON.stringify({"imgString":imgJson["imgString"],"billModel":imgJson["billModel"]}),
           success:function(d){
               loadingGif('loadingGif');
               imgJson['num']=0;//防止重复提交
@@ -116,7 +117,7 @@ function createTable(result,timeTake){
         var tableString =p+ "<table id='billmodeltable' class='gridtable'><tr><th>序号</th><th>值</th></tr>"
                         
         for(var i=0;i<jsObject.length;i++){
-            tableString+="<tr><td><p>"+i+"</p></td><td><p contenteditable='true'>"+jsObject[i]["text"]+"</p></td></tr>";
+            tableString+="<tr><td><p>"+jsObject[i]["name"]+"</p></td><td><p contenteditable='true'>"+jsObject[i]["text"]+"</p></td></tr>";
         }
         tableString+="</table>";
         //jQuery("#mytable").append(p);
