@@ -45,7 +45,7 @@ ipython app.py 8080 ##8080端口号，可以设置任意端口
 
 ## 识别结果展示
 
-<img width="500" height="300" src="https://github.com/chineseocr/chineseocr/blob/master/test/train1/png"/>
+<img width="500" height="300" src="https://github.com/chineseocr/chineseocr/blob/master/test/train1.png"/>
 <img width="500" height="300" src="https://github.com/chineseocr/chineseocr/blob/master/test/card1.png"/>
 <img width="500" height="300" src="https://github.com/chineseocr/chineseocr/blob/master/test/demo2.png"/>
 
