@@ -24,7 +24,7 @@ elif nmsFlag=='cython':
         from text.detector.utils.cython_nms  import nms as  cython_nms
     except:
          cython_nms = None
-    gpu_nms ==None
+    gpu_nms =None
 else:
     gpu_nms =None
     cython_nms = None
