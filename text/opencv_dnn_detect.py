@@ -4,7 +4,7 @@ from config import IMGSIZE
 from PIL import Image
 import numpy as np
 import cv2
-textNet  = cv2.dnn.readNetFromDarknet(yoloCfg,yoloWeights)
+
 if opencvFlag=='keras':
     ##转换为tf模型，以便GPU调用
     import tensorflow as tf
@@ -23,10 +23,11 @@ if opencvFlag=='keras':
     
 else:
    angleNet = cv2.dnn.readNetFromTensorflow(AngleModelPb,AngleModelPbtxt)##dnn 文字方向检测
-
+textNet  = cv2.dnn.readNetFromDarknet(yoloCfg,yoloWeights)##文字定位
 def text_detect(img):
     thresh=0
     h,w = img.shape[:2]
+    
     inputBlob = cv2.dnn.blobFromImage(img, scalefactor=0.00390625, size=IMGSIZE,swapRB=True ,crop=False);
     textNet.setInput(inputBlob)
     pred = textNet.forward()

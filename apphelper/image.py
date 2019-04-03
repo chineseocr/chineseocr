@@ -18,6 +18,10 @@ from bs4 import BeautifulSoup
  
 def sort_box_(box):
     x1,y1,x2,y2,x3,y3,x4,y4 = box[:8]
+    pts = (x1,y1),(x2,y2),(x3,y3),(x4,y4)
+    pts = np.array(pts, dtype="float32")
+    (x1,y1),(x2,y2),(x3,y3),(x4,y4) = _order_points(pts)
+    """
     newBox = [[x1,y1],[x2,y2],[x3,y3],[x4,y4]]
     ## sort x
     newBox = sorted(newBox,key=lambda x:x[0])
@@ -35,7 +39,41 @@ def sort_box_(box):
     
     newBox = sorted(newBox,key=lambda x:-x[1])
     x3,y3 = sorted(newBox[:2],key=lambda x:x[0])[0]
+    """
     return x1,y1,x2,y2,x3,y3,x4,y4
+
+
+import numpy as np
+from scipy.spatial import distance as dist
+def _order_points(pts):
+    # 根据x坐标对点进行排序
+    """
+    --------------------- 
+    作者：Tong_T 
+    来源：CSDN 
+    原文：https://blog.csdn.net/Tong_T/article/details/81907132 
+    版权声明：本文为博主原创文章，转载请附上博文链接！
+    """
+    x_sorted = pts[np.argsort(pts[:, 0]), :]
+
+    # 从排序中获取最左侧和最右侧的点
+    # x坐标点
+    left_most = x_sorted[:2, :]
+    right_most = x_sorted[2:, :]
+
+    # 现在，根据它们的y坐标对最左边的坐标进行排序，这样我们就可以分别抓住左上角和左下角
+    left_most = left_most[np.argsort(left_most[:, 1]), :]
+    (tl, bl) = left_most
+
+    # 现在我们有了左上角坐标，用它作为锚来计算左上角和右上角之间的欧氏距离;
+    # 根据毕达哥拉斯定理，距离最大的点将是我们的右下角
+    distance = dist.cdist(tl[np.newaxis], right_most, "euclidean")[0]
+    (br, tr) = right_most[np.argsort(distance)[::-1], :]
+
+    # 返回左上角，右上角，右下角和左下角的坐标
+    return np.array([tl, tr, br, bl], dtype="float32")
+
+
 
 def solve(box):
      """
@@ -96,10 +134,18 @@ def read_voc_xml(p):
                     continue
                     
                 angle = np.float(angle)
+                
+                if abs(angle)>np.pi/2:
+                    w,h = h,w
+                    angle     = abs(angle)%(np.pi/2)*np.sign(angle)
+                
                 x1,y1,x2,y2,x3,y3,x4,y4 = xy_rotate_box(cx,cy,w,h,angle)
-                if angle>np.pi/4:
+                x1,y1,x2,y2,x3,y3,x4,y4 = sort_box_([x1,y1,x2,y2,x3,y3,x4,y4])
+                """
+                if abs(angle)>np.pi/2:
                     ##lableImg bug
                     x1,y1,x2,y2,x3,y3,x4,y4 = sort_box_([x1,y1,x2,y2,x3,y3,x4,y4])
+                """
                 angle,w,h,cx,cy = solve([x1,y1,x2,y2,x3,y3,x4,y4])
                 
             else:
@@ -479,3 +525,90 @@ def get_boxes( bboxes):
     return text_recs
 
 
+
+def union_rbox(result,alpha=0.1):
+    """
+    按行合并box
+    """            
+    def diff(box1,box2):
+        """
+        计算box1,box2之间的距离
+        """
+        cy1 = box1['cy']
+        cy2 = box2['cy']
+        h1  = box1['h']
+        h2 = box2['h']
+        
+        return abs(cy1-cy2)/max(0.01,min(h1/2,h2/2))
+    
+    def sort_group_box(boxes):
+        """
+        对box进行排序, 并合并box
+        """   
+        N = len(boxes)
+        boxes = sorted(boxes,key=lambda x:x['cx'])
+        text  = ' '.join([bx['text'] for bx in boxes])
+        box4 = np.zeros((N,8))
+        for i in range(N):
+            cx =boxes[i]['cx']
+            cy = boxes[i]['cy']
+            degree =boxes[i]['degree']
+            w  = boxes[i]['w']
+            h = boxes[i]['h']
+            x1,y1,x2,y2,x3,y3,x4,y4 = xy_rotate_box(cx, cy, w, h, degree/180*np.pi)
+            box4[i] = [x1,y1,x2,y2,x3,y3,x4,y4]
+            
+        x1 = box4[:,0].min()
+        y1 = box4[:,1].min()
+        x2 = box4[:,2].max()
+        y2 = box4[:,3].min()
+        x3 = box4[:,4].max()
+        y3 = box4[:,5].max()
+        x4 = box4[:,6].min()
+        y4 = box4[:,7].max()
+        angle,w,h,cx,cy = solve([x1,y1,x2,y2,x3,y3,x4,y4])
+        return {'text':text,'cx':cx,'cy':cy,'w':w,'h':h,'degree':angle/np.pi*180}
+    
+    
+
+    newBox = []
+    for line in result:
+        if len(newBox)==0:
+            newBox.append([line])
+        else:
+            check=False
+            for box in newBox[-1]:
+                if diff(line,box)>alpha:
+                    check = True
+                    
+            if not check:
+                newBox[-1].append(line)
+            else:
+                newBox.append([line])
+    newBox = [sort_group_box(bx) for bx in newBox]
+    return newBox
+            
+
+def adjust_box_to_origin(img,angle, result):
+    """
+    调整box到原图坐标
+    """
+    h,w = img.shape[:2]
+    if angle in [90,270]:
+        imgW,imgH = img.shape[:2]
+        
+    else:
+        imgH,imgW= img.shape[:2]
+    newresult = []
+    for line in result:
+        cx =line['box']['cx']
+        cy = line['box']['cy']
+        degree =line['box']['angle']
+        w  = line['box']['w']
+        h = line['box']['h']
+        x1,y1,x2,y2,x3,y3,x4,y4 = xy_rotate_box(cx, cy, w, h, degree/180*np.pi)
+        x1,y1,x2,y2,x3,y3,x4,y4 = box_rotate([x1,y1,x2,y2,x3,y3,x4,y4],angle=(360-angle)%360,imgH=imgH,imgW=imgW)
+        box = x1,y1,x2,y2,x3,y3,x4,y4
+        newresult.append({'name':line['name'],'text':line['text'],'box':box})
+       
+    return newresult

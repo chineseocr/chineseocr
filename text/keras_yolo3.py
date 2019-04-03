@@ -1,12 +1,13 @@
 """
 YOLO_v3 Model Defined in Keras.
 Reference: https://github.com/qqwweee/keras-yolo3.git
+@@ 2019-02-22 替换keras---->tf.keras  K.tile--->tf.tile K.control_flow_ops.while_loop------>tf.while_loop
 """
 from functools import reduce
 from functools import wraps
 import numpy as np
 import tensorflow as tf
-
+"""
 from keras import backend as K
 from keras.layers import Conv2D, Add, ZeroPadding2D, UpSampling2D, Concatenate, MaxPooling2D,Input
 from keras.layers.advanced_activations import LeakyReLU
@@ -15,7 +16,22 @@ from keras.models import Model
 from keras.regularizers import l2
 from keras.layers import Lambda
 from keras.layers import concatenate
-
+"""
+K                  = tf.keras.backend
+Conv2D             = tf.keras.layers.Conv2D
+Add                = tf.keras.layers.Add
+ZeroPadding2D      = tf.keras.layers.ZeroPadding2D
+UpSampling2D       = tf.keras.layers.UpSampling2D
+Concatenate        = tf.keras.layers.Concatenate
+MaxPooling2D       = tf.keras.layers.MaxPooling2D
+Input              = tf.keras.layers.Input
+LeakyReLU          = tf.keras.layers.LeakyReLU
+BatchNormalization = tf.keras.layers.BatchNormalization
+Lambda             = tf.keras.layers.Lambda
+concatenate        = tf.keras.layers.concatenate
+Model              = tf.keras.models.Model
+l2                 = tf.keras.regularizers.l2
+l1                 = tf.keras.regularizers.l1
 
 def compose(*funcs):
     """Compose arbitrarily many functions, evaluated left to right.
@@ -32,6 +48,7 @@ def compose(*funcs):
 def DarknetConv2D(*args, **kwargs):
     """Wrapper to set Darknet parameters for Convolution2D."""
     darknet_conv_kwargs = {'kernel_regularizer': l2(5e-4)}
+    #darknet_conv_kwargs = {}
     darknet_conv_kwargs['padding'] = 'valid' if kwargs.get('strides')==(2,2) else 'same'
     darknet_conv_kwargs.update(kwargs)
     return Conv2D(*args, **darknet_conv_kwargs)
@@ -89,9 +106,9 @@ def yolo_head(feats, anchors, num_classes, input_shape, calc_loss=False):
     anchors_tensor = K.reshape(K.constant(anchors), [1, 1, 1, num_anchors, 2])
 
     grid_shape = K.shape(feats)[1:3] # height, width
-    grid_y = K.tile(K.reshape(K.arange(0, stop=grid_shape[0]), [-1, 1, 1, 1]),
+    grid_y =tf.tile(K.reshape(K.arange(0, stop=grid_shape[0]), [-1, 1, 1, 1]),
         [1, grid_shape[1], 1, 1])
-    grid_x = K.tile(K.reshape(K.arange(0, stop=grid_shape[1]), [1, -1, 1, 1]),
+    grid_x =tf.tile(K.reshape(K.arange(0, stop=grid_shape[1]), [1, -1, 1, 1]),
         [grid_shape[0], 1, 1, 1])
     grid = K.concatenate([grid_x, grid_y])
     grid = K.cast(grid, K.dtype(feats))
@@ -278,7 +295,9 @@ def yolo_loss(args, anchors, num_classes, ignore_thresh=.5):
             best_iou = K.max(iou, axis=-1)
             ignore_mask = ignore_mask.write(b, K.cast(best_iou<ignore_thresh, K.dtype(true_box)))
             return b+1, ignore_mask
-        _, ignore_mask = K.control_flow_ops.while_loop(lambda b,*args: b<m, loop_body, [0, ignore_mask])
+        
+        #_, ignore_mask = K.control_flow_ops.while_loop(lambda b,*args: b<m, loop_body, [0, ignore_mask])
+        _, ignore_mask = tf.while_loop(lambda b,*args: b<m, loop_body, [0, ignore_mask])
         ignore_mask = ignore_mask.stack()
         ignore_mask = K.expand_dims(ignore_mask, -1)
 
@@ -289,17 +308,17 @@ def yolo_loss(args, anchors, num_classes, ignore_thresh=.5):
             (1-object_mask) * K.binary_crossentropy(object_mask, raw_pred[...,4:5], from_logits=True) * ignore_mask
         class_loss = object_mask * K.binary_crossentropy(true_class_probs, raw_pred[...,5:], from_logits=True)
 
-        xy_loss = K.sum(xy_loss,axis=1) #/ mf
-        wh_loss = K.sum(wh_loss,axis=1) #/ mf
-        confidence_loss = K.sum(confidence_loss,axis=1) #/ mf
-        class_loss = K.sum(class_loss,axis=1) #/ mf
-        #####singe box loss
-        loss[0]+=K.mean(class_loss)
-        loss[1]+=K.mean(xy_loss)
-        loss[2]+=K.mean(wh_loss)
-        loss[3]+=K.mean(confidence_loss)
+        xy_loss = K.sum(xy_loss) / mf
+        wh_loss = K.sum(wh_loss) / mf
+        confidence_loss = K.sum(confidence_loss) / mf
+        class_loss = K.sum(class_loss) / mf
+        
+        loss[0]+=class_loss
+        loss[1]+=xy_loss
+        loss[2]+=wh_loss
+        loss[3]+=confidence_loss
 
-    loss = [loss[0]/num_layers,loss[1]/num_layers,loss[2]/num_layers,loss[3]/num_layers]
+    #loss = [loss[0]/num_layers,loss[1]/num_layers,loss[2]/num_layers,loss[3]/num_layers]
     
     loss = K.stack(loss)
     return loss
@@ -398,3 +417,5 @@ def yolo_text(num_classes,anchors,train=False):
         #box_scores = Lambda(box_layer,arguments={'anchors':anchors,'num_classes':num_classes})([*out,image_shape,input_shape])
         #textModel = Model([imgInput,image_shape,input_shape],box_scores)
         #return textModel
+        
+        
