@@ -2,8 +2,9 @@
 YOLO_v3 Model Defined in Keras.
 Reference: https://github.com/qqwweee/keras-yolo3.git
 """
+from config import kerasTextModel,IMGSIZE,keras_anchors,class_names,GPU,GPUID
 from text.keras_yolo3 import yolo_text,box_layer,K
-from config import kerasTextModel,IMGSIZE,keras_anchors,class_names
+
 from apphelper.image import resize_im,letterbox_image
 from PIL import Image
 import numpy as np
@@ -59,14 +60,12 @@ def text_detect(img,prob = 0.05):
         
 
     keep = np.where(scores>prob)
-    
     box[:, 0:4][box[:, 0:4]<0] = 0
     box[:, 0][box[:, 0]>=w] = w-1
     box[:, 1][box[:, 1]>=h] = h-1
     box[:, 2][box[:, 2]>=w] = w-1
     box[:, 3][box[:, 3]>=h] = h-1
     box = box[keep[0]]
-
     scores = scores[keep[0]]
     return box,scores
 

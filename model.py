@@ -1,13 +1,23 @@
 # -*- coding: utf-8 -*-
+from config import opencvFlag,GPU,IMGSIZE,ocrFlag
+if not GPU:
+    import os
+    os.environ["CUDA_VISIBLE_DEVICES"]=''##不启用GPU
+    
+if ocrFlag=='torch':
+    from crnn.crnn_torch import crnnOcr as crnnOcr ##torch版本ocr
+elif ocrFlag=='keras':
+     from crnn.crnn_keras import crnnOcr as crnnOcr ##keras版本OCR
+    
 import time
 import cv2
 import numpy as np
 from PIL import Image
 from glob import glob
-from crnn.crnn import crnnOcr as crnnOcr 
+
 from text.detector.detectors import TextDetector
 from apphelper.image import get_boxes,letterbox_image
-from config import opencvFlag,GPU,IMGSIZE
+
 from text.opencv_dnn_detect import angle_detect##文字方向检测,支持dnn/tensorflow
 from apphelper.image import estimate_skew_angle ,rotate_cut_img,xy_rotate_box,sort_box,box_rotate,solve
 
@@ -28,27 +38,19 @@ def text_detect(img,
                 TEXT_PROPOSALS_MIN_SCORE=0.7,
                 TEXT_PROPOSALS_NMS_THRESH=0.3,
                 TEXT_LINE_NMS_THRESH = 0.3,
-                MIN_RATIO=1.0,
-                LINE_MIN_SCORE=0.8,
-                TEXT_PROPOSALS_WIDTH=5,
-                MIN_NUM_PROPOSALS=1,
-                
                 ):
     boxes, scores = detect.text_detect(np.array(img))
     boxes = np.array(boxes,dtype=np.float32)
     scores = np.array(scores,dtype=np.float32)
     textdetector  = TextDetector(MAX_HORIZONTAL_GAP,MIN_V_OVERLAPS,MIN_SIZE_SIM)
-    shape = img.size[::-1]
+    shape = img.shape[:2]
     boxes = textdetector.detect(boxes,
                                 scores[:, np.newaxis],
                                 shape,
                                 TEXT_PROPOSALS_MIN_SCORE,
                                 TEXT_PROPOSALS_NMS_THRESH,
                                 TEXT_LINE_NMS_THRESH,
-                                MIN_RATIO,
-                                LINE_MIN_SCORE,
-                                TEXT_PROPOSALS_WIDTH,
-                                MIN_NUM_PROPOSALS)
+                                )
     
     text_recs = get_boxes(boxes)
     newBox = []
@@ -67,71 +69,59 @@ def text_detect(img,
 def crnnRec(im,boxes,leftAdjust=False,rightAdjust=False,alph=0.2,f=1.0):
    """
    crnn模型，ocr识别
-   @@model,
-   @@converter,
-   @@im:Array
-   @@text_recs:text box
-   @@ifIm:是否输出box对应的img
-   
+   leftAdjust,rightAdjust 是否左右调整box 边界误差，解决文字漏检
    """
    results = []
    im = Image.fromarray(im) 
    for index,box in enumerate(boxes):
-
        degree,w,h,cx,cy = solve(box)
        partImg,newW,newH = rotate_cut_img(im,degree,box,w,h,leftAdjust,rightAdjust,alph)
-       newBox = xy_rotate_box(cx,cy,newW,newH,degree)
-       partImg_ = partImg.convert('L')
-       simPred = crnnOcr(partImg_)##识别的文本
-       if simPred.strip()!=u'':
-            results.append({'cx':cx*f,'cy':cy*f,'text':simPred,'w':newW*f,'h':newH*f,'degree':degree*180.0/np.pi})
+       text = crnnOcr(partImg.convert('L'))
+       if text.strip()!=u'':
+            results.append({'cx':cx*f,'cy':cy*f,'text':text,'w':newW*f,'h':newH*f,'degree':degree*180.0/np.pi})
  
    return results
 
 
 
 
-def eval_angle(im,detectAngle=False,ifadjustDegree=True):
+def eval_angle(im,detectAngle=False):
     """
     估计图片偏移角度
     @@param:im
-    @@param:ifadjustDegree 调整文字识别结果
     @@param:detectAngle 是否检测文字朝向
     """
     angle = 0
-    degree=0.0
     img = np.array(im)
     if detectAngle:
         angle = angle_detect(img=np.copy(img))##文字朝向检测
         if angle==90:
-            im = im.transpose(Image.ROTATE_90)
+            im = Image.fromarray(im).transpose(Image.ROTATE_90)
         elif angle==180:
-            im = im.transpose(Image.ROTATE_180)
+            im = Image.fromarray(im).transpose(Image.ROTATE_180)
         elif angle==270:
-            im = im.transpose(Image.ROTATE_270)
+            im = Image.fromarray(im).transpose(Image.ROTATE_270)
         img = np.array(im)
         
-    if ifadjustDegree:
-       degree = estimate_skew_angle(np.array(im.convert('L')))
-    return  angle,degree,im.rotate(degree)
+    return  angle,img
 
 
-def model(img,detectAngle=False,config={},leftAdjust=False,rightAdjust=False,alph=0.2,ifadjustDegree=False):
+def model(img,detectAngle=False,config={},leftAdjust=False,rightAdjust=False,alph=0.2):
     """
     @@param:img,
     @@param:ifadjustDegree 调整文字识别倾斜角度
     @@param:detectAngle,是否检测文字朝向
     """
-    angle,degree,img = eval_angle(img,detectAngle=detectAngle,ifadjustDegree=ifadjustDegree)
+    angle,img = eval_angle(img,detectAngle=detectAngle)##文字方向检测
     if opencvFlag!='keras':
-       img,f =letterbox_image(img, IMGSIZE)
+       img,f =letterbox_image(Image.fromarray(img), IMGSIZE)## pad
+       img = np.array(img)
     else:
         f=1.0##解决box在原图坐标不一致问题
     
     config['img'] = img
-    text_recs = text_detect(**config)
-    
-    newBox = sort_box(text_recs)
+    text_recs = text_detect(**config)##文字检测
+    newBox = sort_box(text_recs)##行文本识别
     result = crnnRec(np.array(img),newBox,leftAdjust,rightAdjust,alph,1.0/f)
     return img,result,angle
 

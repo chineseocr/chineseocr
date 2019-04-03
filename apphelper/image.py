@@ -539,7 +539,7 @@ def union_rbox(result,alpha=0.1):
         h1  = box1['h']
         h2 = box2['h']
         
-        return abs(cy1-cy2)/max(0.01,min(h1/2,h1/2))
+        return abs(cy1-cy2)/max(0.01,min(h1/2,h2/2))
     
     def sort_group_box(boxes):
         """
@@ -589,3 +589,26 @@ def union_rbox(result,alpha=0.1):
     return newBox
             
 
+def adjust_box_to_origin(img,angle, result):
+    """
+    调整box到原图坐标
+    """
+    h,w = img.shape[:2]
+    if angle in [90,270]:
+        imgW,imgH = img.shape[:2]
+        
+    else:
+        imgH,imgW= img.shape[:2]
+    newresult = []
+    for line in result:
+        cx =line['box']['cx']
+        cy = line['box']['cy']
+        degree =line['box']['angle']
+        w  = line['box']['w']
+        h = line['box']['h']
+        x1,y1,x2,y2,x3,y3,x4,y4 = xy_rotate_box(cx, cy, w, h, degree/180*np.pi)
+        x1,y1,x2,y2,x3,y3,x4,y4 = box_rotate([x1,y1,x2,y2,x3,y3,x4,y4],angle=(360-angle)%360,imgH=imgH,imgW=imgW)
+        box = x1,y1,x2,y2,x3,y3,x4,y4
+        newresult.append({'name':line['name'],'text':line['text'],'box':box})
+       
+    return newresult
