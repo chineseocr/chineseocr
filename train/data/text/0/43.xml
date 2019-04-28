@@ -1,7 +1,7 @@
 <annotation verified="no">
   <folder>0</folder>
   <filename>43</filename>
-  <path>/Users/lywen/Desktop/data/ocr/mtwi_2018_train/data/0/43.jpg</path>
+  <path>/Users/lywen/Desktop/2019/git/chineseocr/train/data/text/0/43.jpg</path>
   <source>
     <database>Unknown</database>
   </source>
@@ -107,6 +107,20 @@
       <w>291.0</w>
       <h>28.0</h>
       <angle>0.0</angle>
+    </robndbox>
+  </object>
+  <object>
+    <type>robndbox</type>
+    <name>text</name>
+    <pose>Unspecified</pose>
+    <truncated>0</truncated>
+    <difficult>0</difficult>
+    <robndbox>
+      <cx>443.2393</cx>
+      <cy>350.8606</cy>
+      <w>557.9036</w>
+      <h>23.6167</h>
+      <angle>3.111593</angle>
     </robndbox>
   </object>
 </annotation>
