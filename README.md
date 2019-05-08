@@ -9,7 +9,7 @@
 ## 环境部署
 
 GPU部署 参考:setup.md     
-GPU部署 参考:setup-cpu.md   
+CPU部署 参考:setup-cpu.md   
 
 
 ### 下载编译darknet(如果直接运用opencv dnn或者keras yolo3 可忽略darknet的编译)  
