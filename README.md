@@ -87,5 +87,5 @@ http://127.0.0.1:8080/ocr
 2. crnn  https://github.com/meijieru/crnn.pytorch.git              
 3. ctpn  https://github.com/eragonruan/text-detection-ctpn    
 4. CTPN  https://github.com/tianzhi0549/CTPN       
-5. keras yolo3 https://github.com/qqwweee/keras-yolo3.git 
-
+5. keras yolo3 https://github.com/qqwweee/keras-yolo3.git    
+6. darknet keras 模型转换参考 参考：https://www.cnblogs.com/shouhuxianjian/p/10567201.html  
