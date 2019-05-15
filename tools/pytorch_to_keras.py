@@ -2,7 +2,18 @@
 转换pytorch版本OCR到keras 
 暂时只支持dense ocr ，lstm层不支持
 """
+import os
+import io
+import argparse
+import configparser
 import numpy as np
+
+def parser():
+    parser = argparse.ArgumentParser(description="pytorch dense ocr to keras ocr")
+    parser.add_argument('-weights_path',help='models/ocr-dense.pth')
+    parser.add_argument('-output_path', help='models/ocr-dense-keras.h5')
+    return parser.parse_args()
+
 def set_cnn_weight(name,keramodel,torchmodelDict):
     """
     将torch  模型CNN层导入 keras模型CNN层
@@ -61,17 +72,20 @@ def set_dense_weight(name,keramodel,torchmodelDict):
 if __name__=='__main__':
     import os
     import sys
+    args = parser()
     GPUID=''
     os.environ["CUDA_VISIBLE_DEVICES"] = GPUID##不调用GPU
     sys.path.append('..')
+    sys.path.append('')
     import torch
     from collections import OrderedDict
     from crnn.keys import alphabetChinese
     from crnn.network_keras import keras_crnn
-    
-    
+    ##ocrModel='models/ocr-dense.pth'##目前只支持 dense ocr
+    ocrModel = args.weights_path##torch模型权重
+    output_path =args.output_path##keras 模型权重输出
     kerasModel = keras_crnn(32, 1, len(alphabetChinese)+1, 256, 1,lstmFlag=False)
-    ocrModel='models/ocr-dense.pth'##目前只支持 dense ocr
+    
     state_dict = torch.load(ocrModel,map_location=lambda storage, loc: storage)
     new_state_dict = OrderedDict()
     for k, v in state_dict.items():
@@ -93,6 +107,6 @@ if __name__=='__main__':
     for lr in linear:
         set_dense_weight(lr,kerasModel,new_state_dict) 
         
-    kerasModel.save_weights('models/ocr-dense-keras.h5')##保存keras权重
+    kerasModel.save_weights(output_path)##保存keras权重
     
     

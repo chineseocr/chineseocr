@@ -4,12 +4,13 @@
 - [x]  文字方向检测 0、90、180、270度检测（支持dnn/tensorflow） 
 - [x]  支持(darknet/opencv dnn /keras)文字检测,支持darknet/keras训练
 - [x]  不定长OCR训练(英文、中英文) crnn\dense ocr 识别及训练 ,新增pytorch转keras模型代码(tools/pytorch_to_keras.py)
+- [x] 支持darknet 转keras, keras转darknet, pytorch 转keras模型
 - [x]  新增对身份证/火车票结构化数据识别
 
 ## 环境部署
 
 GPU部署 参考:setup.md     
-GPU部署 参考:setup-cpu.md   
+CPU部署 参考:setup-cpu.md   
 
 
 ### 下载编译darknet(如果直接运用opencv dnn或者keras yolo3 可忽略darknet的编译)  
@@ -36,6 +37,19 @@ lib = CDLL(root+"chineseocr/darknet/libdarknet.so", RTLD_GLOBAL)
 
 复制文件夹中的所有文件到models目录
    
+## 模型转换
+pytorch ocr 转keras ocr     
+``` Bash
+python tools/pytorch_to_keras.py  -weights_path models/ocr-dense.pth -output_path models/ocr-dense-keras.h5
+```
+darknet 转keras     
+``` Bash
+python tools/darknet_to_keras.py -cfg_path models/text.cfg -weights_path models/text.weights -output_path models/text.h5
+```
+keras 转darknet      
+``` Bash
+python tools/keras_to_darknet.py -cfg_path models/text.cfg -weights_path models/text.h5 -output_path models/text.weights
+```
 
 ## web服务启动
 ``` Bash
