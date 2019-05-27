@@ -24,24 +24,36 @@ if opencvFlag=='keras':
 else:
    angleNet = cv2.dnn.readNetFromTensorflow(AngleModelPb,AngleModelPbtxt)##dnn 文字方向检测
 textNet  = cv2.dnn.readNetFromDarknet(yoloCfg,yoloWeights)##文字定位
+
 def text_detect(img):
-    thresh=0
-    h,w = img.shape[:2]
-    
-    inputBlob = cv2.dnn.blobFromImage(img, scalefactor=0.00390625, size=IMGSIZE,swapRB=True ,crop=False);
-    textNet.setInput(inputBlob)
-    pred = textNet.forward()
-    cx = pred[:,0]*w
-    cy = pred[:,1]*h
-    xmin = cx - pred[:,2]*w/2
-    xmax = cx + pred[:,2]*w/2
-    ymin = cy - pred[:,3]*h/2
-    ymax = cy + pred[:,3]*h/2
-    scores = pred[:,4]
-    indx = np.where(scores>thresh)[0]
-    scores = scores[indx]
-    boxes = np.array(list(zip(xmin[indx],ymin[indx],xmax[indx],ymax[indx])))
-    return boxes,scores
+    thresh = 0
+    img_height,img_width = img.shape[:2]
+    inputBlob = cv2.dnn.blobFromImage(img, scalefactor=1.0, size=IMGSIZE,swapRB=True ,crop=False);
+    textNet.setInput(inputBlob/255.0)
+    outputName = textNet.getUnconnectedOutLayersNames()
+    outputs = textNet.forward(outputName)
+    class_ids = []
+    confidences = []
+    boxes = []
+    for output in outputs:
+            for detection in output:
+                scores = detection[5:]
+                class_id = np.argmax(scores)
+                confidence = scores[class_id]
+                if confidence > thresh:
+                    center_x = int(detection[0] * img_width)
+                    center_y = int(detection[1] * img_height)
+                    width = int(detection[2] * img_width)
+                    height = int(detection[3] * img_height)
+                    left = int(center_x - width / 2)
+                    top = int(center_y - height / 2)
+                    if class_id==1:
+                        class_ids.append(class_id)
+                        confidences.append(float(confidence))
+                        boxes.append([left, top,left+width, top+height ])
+        
+    return np.array(boxes),np.array(confidences)
+
 
 
 def angle_detect_dnn(img,adjust=True):
