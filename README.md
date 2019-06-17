@@ -6,6 +6,7 @@
 - [x]  不定长OCR训练(英文、中英文) crnn\dense ocr 识别及训练 ,新增pytorch转keras模型代码(tools/pytorch_to_keras.py)
 - [x] 支持darknet 转keras, keras转darknet, pytorch 转keras模型
 - [x]  新增对身份证/火车票结构化数据识别
+- []  新增语言模型修正OCR识别结果     
 
 ## 环境部署
 
@@ -51,6 +52,17 @@ keras 转darknet
 python tools/keras_to_darknet.py -cfg_path models/text.cfg -weights_path models/text.h5 -output_path models/text.weights
 ```
 
+## 编译语言模型
+``` Bash
+git clone --recursive https://github.com/parlance/ctcdecode.git   
+cd ctcdecode   
+pip install .  
+```
+## 下载语言模型  
+``` Bash
+wget https://deepspeech.bj.bcebos.com/zh_lm/zh_giga.no_cna_cmn.prune01244.klm
+mv zh_giga.no_cna_cmn.prune01244.klm chineseocr/models/
+```
 ## web服务启动
 ``` Bash
 cd chineseocr## 进入chineseocr目录
@@ -89,3 +101,4 @@ http://127.0.0.1:8080/ocr
 4. CTPN  https://github.com/tianzhi0549/CTPN       
 5. keras yolo3 https://github.com/qqwweee/keras-yolo3.git    
 6. darknet keras 模型转换参考 参考：https://www.cnblogs.com/shouhuxianjian/p/10567201.html  
+7. 语言模型实现 https://github.com/lukhy/masr
