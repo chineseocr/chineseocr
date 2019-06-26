@@ -14,16 +14,17 @@ class strLabelConverter(object):
         for i, char in enumerate(alphabet):
             # NOTE: 0 is reserved for 'blank' required by wrap_ctc
             self.dict[char] = i + 1
+
     def encode(self, text, depth=0):
         """Support batch or single str."""
         length = []
-        result=[]
+        result = []
         for str in text:
             length.append(len(str))
             for char in str:
-               #print(char)
-               index = self.dict[char]
-               result.append(index)
+                # print(char)
+                index = self.dict[char]
+                result.append(index)
         text = result
         return (torch.IntTensor(text), torch.IntTensor(length))
 

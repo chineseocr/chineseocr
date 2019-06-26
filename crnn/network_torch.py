@@ -1,6 +1,8 @@
 import torch.nn as nn
+
+
 class BidirectionalLSTM(nn.Module):
-    
+
     def __init__(self, nIn, nHidden, nOut):
         super(BidirectionalLSTM, self).__init__()
         self.rnn = nn.LSTM(nIn, nHidden, bidirectional=True)
@@ -13,12 +15,11 @@ class BidirectionalLSTM(nn.Module):
         output = self.embedding(t_rec)  # [T * b, nOut]
         output = output.view(T, b, -1)
         return output
-    
 
 
 class CRNN(nn.Module):
 
-    def __init__(self, imgH, nc, nclass, nh, n_rnn=2, leakyRelu=False,lstmFlag=True):
+    def __init__(self, imgH, nc, nclass, nh, n_rnn=2, leakyRelu=False, lstmFlag=True):
         """
         是否加入lstm特征层
         """
@@ -59,34 +60,32 @@ class CRNN(nn.Module):
         cnn.add_module('pooling{0}'.format(3),
                        nn.MaxPool2d((2, 2), (2, 1), (0, 1)))  # 512x2x16
         convRelu(6, True)  # 512x1x16
-        
+
         self.cnn = cnn
         if self.lstmFlag:
             self.rnn = nn.Sequential(
                 BidirectionalLSTM(512, nh, nh),
                 BidirectionalLSTM(nh, nh, nclass))
         else:
-            self.linear = nn.Linear(nh*2, nclass)
-            
+            self.linear = nn.Linear(nh * 2, nclass)
 
     def forward(self, input):
         # conv features
         conv = self.cnn(input)
         b, c, h, w = conv.size()
-        
+
         assert h == 1, "the height of conv must be 1"
         conv = conv.squeeze(2)
         conv = conv.permute(2, 0, 1)  # [w, b, c]
         if self.lstmFlag:
-           # rnn features
-           output = self.rnn(conv)
+            # rnn features
+            output = self.rnn(conv)
         else:
-             T, b, h = conv.size()
-             
-             t_rec = conv.contiguous().view(T * b, h)
-             
-             output = self.linear(t_rec)  # [T * b, nOut]
-             output = output.view(T, b, -1)
-             
-             
+            T, b, h = conv.size()
+
+            t_rec = conv.contiguous().view(T * b, h)
+
+            output = self.linear(t_rec)  # [T * b, nOut]
+            output = output.view(T, b, -1)
+
         return output

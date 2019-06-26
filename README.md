@@ -30,8 +30,10 @@ make
 root = '/root/'##chineseocr所在目录     
 lib = CDLL(root+"chineseocr/darknet/libdarknet.so", RTLD_GLOBAL)    
 
+## 文字方向检测
+在VGG16模型的基础上进行迁移学习，训练文字方向检测（0、90、180、270度）分类模型，详细代码参考angle/predict.py文件，训练图片100000张，准确率95.10%。
 
-## 下载模型文件   
+### 下载模型文件   
 模型文件地址:
 * [baidu pan](https://pan.baidu.com/s/1gTW9gwJR6hlwTuyB6nCkzQ)
 * [google drive](https://drive.google.com/drive/folders/1XiT1FLFvokAdwfE9WSUSS1PnZA34WBzy?usp=sharing)
