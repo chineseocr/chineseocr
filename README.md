@@ -6,7 +6,9 @@
 - [x]  不定长OCR训练(英文、中英文) crnn\dense ocr 识别及训练 ,新增pytorch转keras模型代码(tools/pytorch_to_keras.py)
 - [x] 支持darknet 转keras, keras转darknet, pytorch 转keras模型
 - [x]  新增对身份证/火车票结构化数据识别
-- []  新增语言模型修正OCR识别结果     
+- [ ]  新增语音模型修正OCR识别结果   
+- [ ]  新增CNN+ctc模型，支持DNN模块调用OCR，单行图像平均时间为0.02秒以下     
+- [ ]  优化CPU调用，识别速度与GPU接近(近期更新)      
 
 ## 环境部署
 
