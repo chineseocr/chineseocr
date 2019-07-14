@@ -6,28 +6,33 @@
 import base64
 import requests
 import json
+
+
 def read_img_base64(p):
-    with open(p,'rb') as f:
+    with open(p, 'rb') as f:
         imgString = base64.b64encode(f.read())
-    imgString=b'data:image/jpeg;base64,'+imgString
+    imgString = b'data:image/jpeg;base64,' + imgString
     return imgString.decode()
 
-def post(p,billModel='通用OCR'):
-    URL='http://127.0.0.1:8080/ocr'##url地址
+
+def post(p, billModel='通用OCR'):
+    URL = 'http://127.0.0.1:8080/ocr'  ##url地址
     imgString = read_img_base64(p)
     headers = {}
-    param      = {'billModel':billModel,##目前支持三种 通用OCR/ 火车票/ 身份证/
-                  'imgString':imgString,}
+    param = {
+        'billModel': billModel,  ##目前支持三种 通用OCR/ 火车票/ 身份证/
+        'imgString': imgString,
+    }
     param = json.dumps(param)
     if 1:
-            req          =  requests.post(URL,data= param,headers=None,timeout=5)
-            data         =  req.content.decode('utf-8')
-            data         =  json.loads(data)
+        req = requests.post(URL, data=param, headers=None, timeout=5)
+        data = req.content.decode('utf-8')
+        data = json.loads(data)
     else:
-            data =[]
+        data = []
     print(data)
 
-    
-if __name__=='__main__':
+
+if __name__ == '__main__':
     p = 'test/card.png'
-    post(p,'身份证')
+    post(p, '身份证')
