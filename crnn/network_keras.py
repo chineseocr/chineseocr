@@ -1,4 +1,4 @@
-from keras.layers import Conv2D,BatchNormalization,MaxPool2D,Input,Permute,Reshape,Dense,LeakyReLU,Activation
+from keras.layers import (Conv2D,BatchNormalization,MaxPool2D,Input,Permute,Reshape,Dense,LeakyReLU,Activation, Bidirectional, LSTM, TimeDistributed)
 from keras.models import Model
 from keras.layers import ZeroPadding2D
 from keras.activations import relu
@@ -68,7 +68,17 @@ def keras_crnn(imgH, nc, nclass, nh, n_rnn=2, leakyRelu=False,lstmFlag=True):
     x = Permute((3, 2, 1))(x)
     
     x = Reshape((-1,512))(x)
-    out = Dense(nclass,name='linear')(x)
+
+    out = None
+    if lstmFlag:
+        x = Bidirectional(LSTM(nh, return_sequences=True, use_bias=True,
+                               recurrent_activation='sigmoid'))(x)
+        x = TimeDistributed(Dense(nh))(x)
+        x = Bidirectional(LSTM(nh, return_sequences=True, use_bias=True,
+                               recurrent_activation='sigmoid'))(x)
+        out = TimeDistributed(Dense(nclass))(x)
+    else:
+        out = Dense(nclass,name='linear')(x)
     out = Reshape((-1, 1, nclass),name='out')(out)
 
     return Model(imgInput,out)
