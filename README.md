@@ -4,11 +4,14 @@
 - [x]  文字方向检测 0、90、180、270度检测（支持dnn/tensorflow） 
 - [x]  支持(darknet/opencv dnn /keras)文字检测,支持darknet/keras训练
 - [x]  不定长OCR训练(英文、中英文) crnn\dense ocr 识别及训练 ,新增pytorch转keras模型代码(tools/pytorch_to_keras.py)
-- [x] 支持darknet 转keras, keras转darknet, pytorch 转keras模型
-- [x]  新增对身份证/火车票结构化数据识别
-- [ ]  新增语音模型修正OCR识别结果   
-- [ ]  新增CNN+ctc模型，支持DNN模块调用OCR，单行图像平均时间为0.02秒以下     
-- [ ]  优化CPU调用，识别速度与GPU接近(近期更新)      
+- [x]  支持darknet 转keras, keras转darknet, pytorch 转keras模型
+- [x]  身份证/火车票结构化数据识别 
+- [x]  新增CNN+ctc模型，支持DNN模块调用OCR，单行图像平均时间为0.02秒以下     
+- [ ]  CPU版本加速    
+- [ ]  支持基于用户字典OCR识别    
+- [ ]  新增语言模型修正OCR识别结果  
+- [ ]  支持树莓派实时识别方案  
+ 
 
 ## 环境部署
 
@@ -36,7 +39,6 @@ lib = CDLL(root+"chineseocr/darknet/libdarknet.so", RTLD_GLOBAL)
 ## 下载模型文件   
 模型文件地址:
 * [baidu pan](https://pan.baidu.com/s/1gTW9gwJR6hlwTuyB6nCkzQ)
-* [google drive](https://drive.google.com/drive/folders/1XiT1FLFvokAdwfE9WSUSS1PnZA34WBzy?usp=sharing)
 
 复制文件夹中的所有文件到models目录
    
@@ -65,11 +67,10 @@ pip install .
 wget https://deepspeech.bj.bcebos.com/zh_lm/zh_giga.no_cna_cmn.prune01244.klm
 mv zh_giga.no_cna_cmn.prune01244.klm chineseocr/models/
 ```
-## web服务启动
+## 模型选择  
 ``` Bash
-cd chineseocr## 进入chineseocr目录
-ipython app.py 8080 ##8080端口号，可以设置任意端口
-```
+参考config.py文件
+```  
 
 ## 构建docker镜像 
 ``` Bash
@@ -81,6 +82,18 @@ docker run -d -p 8080:8080 chineseocr /root/anaconda3/bin/python app.py
 
 ```
 
+## web服务启动
+``` Bash
+cd chineseocr## 进入chineseocr目录
+python app.py 8080 ##8080端口号，可以设置任意端口
+```
+
+## 访问服务
+http://127.0.0.1:8080/ocr
+
+<img width="500" height="300" src="https://github.com/chineseocr/chineseocr/blob/master/test/demo.png"/>
+
+
 
 ## 识别结果展示
 
@@ -89,11 +102,6 @@ docker run -d -p 8080:8080 chineseocr /root/anaconda3/bin/python app.py
 <img width="500" height="300" src="https://github.com/chineseocr/chineseocr/blob/master/test/img-demo.png"/>
 <img width="500" height="300" src="https://github.com/chineseocr/chineseocr/blob/master/test/line-demo.png"/>
 
-
-## 访问服务
-http://127.0.0.1:8080/ocr
-
-<img width="500" height="300" src="https://github.com/chineseocr/chineseocr/blob/master/test/demo.png"/>
 
 
 ## 参考

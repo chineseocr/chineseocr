@@ -1,78 +1,36 @@
 # -*- coding: utf-8 -*-
 """
 ##图像相关函数
-@author: lywen
+@author: chineseocr
 """
-import sys
 import six
-import os
 import base64
-import requests
 import numpy as np
 import cv2
 from PIL import Image
-import traceback
-import uuid
-from glob import glob
-from bs4 import BeautifulSoup
- 
-def sort_box_(box):
-    x1,y1,x2,y2,x3,y3,x4,y4 = box[:8]
-    pts = (x1,y1),(x2,y2),(x3,y3),(x4,y4)
-    pts = np.array(pts, dtype="float32")
-    (x1,y1),(x2,y2),(x3,y3),(x4,y4) = _order_points(pts)
+from io import BytesIO
+def base64_to_PIL(string):
     """
-    newBox = [[x1,y1],[x2,y2],[x3,y3],[x4,y4]]
-    ## sort x
-    newBox = sorted(newBox,key=lambda x:x[0])
-    x1,y1 = sorted(newBox[:2],key=lambda x:x[1])[0]
-    index = newBox.index([x1,y1])
-    newBox.pop(index)
-    newBox = sorted(newBox,key=lambda x:-x[1])
-    x4,y4 = sorted(newBox[:2],key=lambda x:x[0])[0]
-    index = newBox.index([x4,y4])
-    newBox.pop(index)
-    newBox = sorted(newBox,key=lambda x:-x[0])
-    x2,y2 = sorted(newBox[:2],key=lambda x:x[1])[0]
-    index = newBox.index([x2,y2])
-    newBox.pop(index)
+    base64 string to PIL
+    """
+    try:    
+            base64_data = base64.b64decode(string)
+            buf = six.BytesIO()
+            buf.write(base64_data)
+            buf.seek(0)
+            img = Image.open(buf).convert('RGB')
+            return img
+    except:
+        return None
     
-    newBox = sorted(newBox,key=lambda x:-x[1])
-    x3,y3 = sorted(newBox[:2],key=lambda x:x[0])[0]
-    """
-    return x1,y1,x2,y2,x3,y3,x4,y4
-
-
-import numpy as np
-from scipy.spatial import distance as dist
-def _order_points(pts):
-    # 根据x坐标对点进行排序
-    """
-    --------------------- 
-    作者：Tong_T 
-    来源：CSDN 
-    原文：https://blog.csdn.net/Tong_T/article/details/81907132 
-    版权声明：本文为博主原创文章，转载请附上博文链接！
-    """
-    x_sorted = pts[np.argsort(pts[:, 0]), :]
-
-    # 从排序中获取最左侧和最右侧的点
-    # x坐标点
-    left_most = x_sorted[:2, :]
-    right_most = x_sorted[2:, :]
-
-    # 现在，根据它们的y坐标对最左边的坐标进行排序，这样我们就可以分别抓住左上角和左下角
-    left_most = left_most[np.argsort(left_most[:, 1]), :]
-    (tl, bl) = left_most
-
-    # 现在我们有了左上角坐标，用它作为锚来计算左上角和右上角之间的欧氏距离;
-    # 根据毕达哥拉斯定理，距离最大的点将是我们的右下角
-    distance = dist.cdist(tl[np.newaxis], right_most, "euclidean")[0]
-    (br, tr) = right_most[np.argsort(distance)[::-1], :]
-
-    # 返回左上角，右上角，右下角和左下角的坐标
-    return np.array([tl, tr, br, bl], dtype="float32")
-
+    
+def PIL_to_base64(image):
+    output = BytesIO()
+    image.save(output,format='png')
+    contents = output.getvalue()
+    output.close()
+    string = base64.b64encode(contents)
+    return string
 
 
 def solve(box):
@@ -103,65 +61,6 @@ def solve(box):
         angle = np.arcsin(sinA)
      return angle,w,h,cx,cy
 
-def read_singLine_for_yolo(p):
-    """
-    单行文本
-    """
-    im = Image.open(p).convert('RGB')
-    w,h = im.size
-    boxes = [{'cx':w/2,'cy':h/2,'w':w,'h':h,'angle':0.0}]
-    return im,boxes
- 
-def read_voc_xml(p):
-    ##读取voc xml 文件
-    boxes = []
-    if os.path.exists(p):
-        with open(p) as f:
-            xmlString = f.read()
-        xmlString = BeautifulSoup(xmlString,'lxml')
-        objList = xmlString.findAll('object')
-        for obj in objList:
-            robndbox = obj.find('robndbox')
-            bndbox = obj.find('bndbox')
-            if robndbox is not None and bndbox is None:
-                cx = np.float(robndbox.find('cx').text)
-                cy = np.float(robndbox.find('cy').text)
-                w = np.float(robndbox.find('w').text)
-                h = np.float(robndbox.find('h').text)
-                angle = robndbox.find('angle').text
-                if angle=='nan' or h==0 or w==0:
-                    #boxes = []
-                    continue
-                    
-                angle = np.float(angle)
-                
-                if abs(angle)>np.pi/2:
-                    w,h = h,w
-                    angle     = abs(angle)%(np.pi/2)*np.sign(angle)
-                
-                x1,y1,x2,y2,x3,y3,x4,y4 = xy_rotate_box(cx,cy,w,h,angle)
-                x1,y1,x2,y2,x3,y3,x4,y4 = sort_box_([x1,y1,x2,y2,x3,y3,x4,y4])
-                """
-                if abs(angle)>np.pi/2:
-                    ##lableImg bug
-                    x1,y1,x2,y2,x3,y3,x4,y4 = sort_box_([x1,y1,x2,y2,x3,y3,x4,y4])
-                """
-                angle,w,h,cx,cy = solve([x1,y1,x2,y2,x3,y3,x4,y4])
-                
-            else:
-                 xmin = np.float(bndbox.find('xmin').text)
-                 xmax = np.float(bndbox.find('xmax').text)
-                 ymin = np.float(bndbox.find('ymin').text)
-                 ymax = np.float(bndbox.find('ymax').text)
-                 cx = (xmin+xmax)/2.0
-                 cy = (ymin+ymax)/2.0
-                 w = (-xmin+xmax)#/2.0
-                 h = (-ymin+ymax)#/2.0
-                 angle =0.0
-            boxes.append({'cx':cx,'cy':cy,'w':w,'h':h,'angle':angle})
-                    
-    return boxes
-
 
 def xy_rotate_box(cx,cy,w,h,angle):
     """
@@ -181,7 +80,7 @@ def xy_rotate_box(cx,cy,w,h,angle):
     x4,y4 = rotate(cx-w/2,cy+h/2,angle,cx,cy)
     return x1,y1,x2,y2,x3,y3,x4,y4
  
-from numpy import cos,sin,pi,tan
+from numpy import cos,sin
 def rotate(x,y,angle,cx,cy):
     """
     点(x,y) 绕(cx,cy)点旋转
@@ -238,64 +137,22 @@ def letterbox_image(image, size,fillValue=[128,128,128]):
     '''
     resize image with unchanged aspect ratio using padding
     '''
-    image_w, image_h = image.size
+    image_h, image_w = image.shape[:2]
     w, h = size
     new_w = int(image_w * min(w*1.0/image_w, h*1.0/image_h))
     new_h = int(image_h * min(w*1.0/image_w, h*1.0/image_h))
     
-    resized_image = image.resize((new_w,new_h), Image.BICUBIC)
+    resized_image = cv2.resize(image,(new_w,new_h))
     if fillValue is None:
-       fillValue = [int(x.mean()) for x in cv2.split(np.array(im))]
-    boxed_image = Image.new('RGB', size, tuple(fillValue))
-    
-    boxed_image.paste(resized_image,)
+       fillValue = [int(x.mean()) for x in cv2.split(np.array(image))]
+    boxed_image = np.zeros((size[1],size[0],3),dtype=np.uint8)
+    boxed_image[:] = fillValue
+    boxed_image[:new_h,:new_w,:] =resized_image 
+
     return boxed_image,new_w/image_w
 
 
-def box_split(boxes,splitW = 15):
-    newBoxes = []
-    for box in boxes:
-        w = box['w']
-        h = box['h']
-        cx = box['cx']
-        cy=box['cy']
-        angle = box['angle']
-        x1,y1,x2,y2,x3,y3,x4,y4 = xy_rotate_box(cx,cy,w,h,angle)
-        splitBoxes =[]
-        i = 1
-        tanAngle = tan(-angle)
-        
-        while True:
-            flag = 0 if i==1 else 1
-            xmin = x1+(i-1)*splitW
-            ymin = y1-tanAngle*splitW*i
-            xmax = x1+i*splitW
-            ymax = y4-(i-1)*tanAngle*splitW +flag*tanAngle*(x4-x1)
-            if xmax>max(x2,x3) and xmin>max(x2,x3):
-                break
-            splitBoxes.append([int(xmin),int(ymin),int(xmax),int(ymax)])
-            
-            i+=1
-        
-        newBoxes.append(splitBoxes)
-    
-    return newBoxes
 
-def get_box_spilt(boxes,im,sizeW,SizeH,splitW=8,isRoate=False,rorateDegree=0):
-    """
-    isRoate:是否旋转box
-    """
-    size = sizeW,SizeH
-
-    if isRoate:
-        ##旋转box
-        im,boxes = get_rorate(boxes,im,degree=rorateDegree)
-        
-    newIm,f  = letterbox_image(im, size)
-    newBoxes = resize_box(boxes,f)
-    newBoxes = sum(box_split(newBoxes,splitW),[])
-    newBoxes = [box+[1] for box in newBoxes]
-    return newBoxes,newIm
 
 
 
@@ -327,96 +184,25 @@ def box_rotate(box,angle=0,imgH=0,imgW=0):
     return (x1_,y1_,x2_,y2_,x3_,y3_,x4_,y4_)
 
 
-def solve(box):
-     """
-     绕 cx,cy点 w,h 旋转 angle 的坐标
-     x = cx-w/2
-     y = cy-h/2
-     x1-cx = -w/2*cos(angle) +h/2*sin(angle)
-     y1 -cy= -w/2*sin(angle) -h/2*cos(angle)
-     
-     h(x1-cx) = -wh/2*cos(angle) +hh/2*sin(angle)
-     w(y1 -cy)= -ww/2*sin(angle) -hw/2*cos(angle)
-     (hh+ww)/2sin(angle) = h(x1-cx)-w(y1 -cy)
-
-     """
-     x1,y1,x2,y2,x3,y3,x4,y4= box[:8]
-     cx = (x1+x3+x2+x4)/4.0
-     cy = (y1+y3+y4+y2)/4.0  
-     w = (np.sqrt((x2-x1)**2+(y2-y1)**2)+np.sqrt((x3-x4)**2+(y3-y4)**2))/2
-     h = (np.sqrt((x2-x3)**2+(y2-y3)**2)+np.sqrt((x1-x4)**2+(y1-y4)**2))/2   
-
-     sinA = (h*(x1-cx)-w*(y1 -cy))*1.0/(h*h+w*w)*2
-     angle = np.arcsin(sinA)
-     return angle,w,h,cx,cy
-    
- 
-from numpy import cos,sin,pi
-def rotate(x,y,angle,cx,cy):
-    angle = angle#*pi/180
-    x_new = (x-cx)*cos(angle) - (y-cy)*sin(angle)+cx
-    y_new = (x-cx)*sin(angle) + (y-cy)*cos(angle)+cy
-    return x_new,y_new
-    
-def xy_rotate_box(cx,cy,w,h,angle):
-    """
-    绕 cx,cy点 w,h 旋转 angle 的坐标
-    x_new = (x-cx)*cos(angle) - (y-cy)*sin(angle)+cx
-    y_new = (x-cx)*sin(angle) + (y-cy)*sin(angle)+cy
-    """
-        
-    cx    = float(cx)
-    cy    = float(cy)
-    w     = float(w)
-    h     = float(h)
-    angle = float(angle)
-    x1,y1 = rotate(cx-w/2,cy-h/2,angle,cx,cy)
-    x2,y2 = rotate(cx+w/2,cy-h/2,angle,cx,cy)
-    x3,y3 = rotate(cx+w/2,cy+h/2,angle,cx,cy)
-    x4,y4 = rotate(cx-w/2,cy+h/2,angle,cx,cy)
-    return x1,y1,x2,y2,x3,y3,x4,y4
-
+                                   
                                 
-                                
-def rotate_cut_img(im,degree,box,w,h,leftAdjust=False,rightAdjust=False,alph=0.2):
-    x1,y1,x2,y2,x3,y3,x4,y4 = box[:8]
-    x_center,y_center = np.mean([x1,x2,x3,x4]),np.mean([y1,y2,y3,y4])
-    degree_ = degree*180.0/np.pi
-    right = 0
-    left  = 0
-    if rightAdjust:
-        right = 1
-    if leftAdjust:
-        left  = 1
+def rotate_cut_img(im,box,leftAdjustAlph=0.0,rightAdjustAlph=0.0):
+    angle,w,h,cx,cy = solve(box)
+    degree_ = angle*180.0/np.pi
     
-    box = (max(1,x_center-w/2-left*alph*(w/2))##xmin
-           ,y_center-h/2,##ymin
-           min(x_center+w/2+right*alph*(w/2),im.size[0]-1)##xmax
-           ,y_center+h/2)##ymax
- 
+    box = (max(1,cx-w/2-leftAdjustAlph*(w/2))##xmin
+           ,cy-h/2,##ymin
+           min(cx+w/2+rightAdjustAlph*(w/2),im.size[0]-1)##xmax
+           ,cy+h/2)##ymax
     newW = box[2]-box[0]
     newH = box[3]-box[1]
-    tmpImg = im.rotate(degree_,center=(x_center,y_center)).crop(box)
-    return tmpImg,newW,newH
+    tmpImg = im.rotate(degree_,center=(cx,cy)).crop(box)
+    box = {'cx':cx,'cy':cy,'w':newW,'h':newH,'degree':degree_,}
+    return tmpImg,box
 
 
 
-def letterbox_image(image, size,fillValue=[128,128,128]):
-    '''resize image with unchanged aspect ratio using padding'''
-    image_w, image_h = image.size
-    w, h = size
-    new_w = int(image_w * min(w*1.0/image_w, h*1.0/image_h))
-    new_h = int(image_h * min(w*1.0/image_w, h*1.0/image_h))
-    
-    resized_image = image.resize((new_w,new_h), Image.BICUBIC)
-    if fillValue is None:
-       fillValue = [int(x.mean()) for x in cv2.split(np.array(im))]
-    boxed_image = Image.new('RGB', size, tuple(fillValue))
-    boxed_image.paste(resized_image, (0,0))
-    return boxed_image,new_w/image_w
-
-from scipy.ndimage import filters,interpolation,morphology,measurements,minimum
-#from pylab import amin, amax
+from scipy.ndimage import filters,interpolation
 from numpy import amin, amax
 def estimate_skew_angle(raw):
     """
@@ -521,8 +307,17 @@ def get_boxes( bboxes):
         text_recs[index, 6] = x4
         text_recs[index, 7] = y4
         index = index + 1
+        
+    boxes = []
+    for box in text_recs:
+           x1,y1 = (box[0],box[1])
+           x2,y2 = (box[2],box[3])
+           x3,y3 = (box[6],box[7])
+           x4,y4 = (box[4],box[5])
+           boxes.append([x1,y1,x2,y2,x3,y3,x4,y4])
+    boxes = np.array(boxes)
 
-    return text_recs
+    return boxes
 
 
 
@@ -612,3 +407,5 @@ def adjust_box_to_origin(img,angle, result):
         newresult.append({'name':line['name'],'text':line['text'],'box':box})
        
     return newresult
+
+

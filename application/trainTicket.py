@@ -1,5 +1,9 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
-火车票
+Created on Sun Aug  4 01:01:37 2019
+火车票识别
+@author: chineseocr
 """
 from apphelper.image import union_rbox
 import re
@@ -28,8 +32,7 @@ class trainTicket:
             txt = txt.replace(' ','')
             
             res = re.findall('[一-龥]+站',txt),re.findall('[一-龥]+站(.+?)[][一-龥]+站',txt)
-            if len(res[0])>0:
-                
+            if len(res[0])>1:
                 station['出发'],station['到达'] = res[0][0].replace('站',''),res[0][1].replace('站','')
             if len(res[1])>0:
                 station['车次'] = res[1][0]

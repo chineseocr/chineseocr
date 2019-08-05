@@ -1,8 +1,8 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 import os
-import sys, os
+import sys
 pwd = os.getcwd()
-import numpy as np
-from PIL import Image
 
 from config import yoloCfg,yoloWeights,yoloData,darknetRoot,GPU,GPUID
 os.chdir(darknetRoot)
@@ -38,7 +38,6 @@ def detect_np(net, meta, image, thresh=.5, hier_thresh=.5, nms=.45):
     dn.free_detections(dets, num)
     return res
 
-import cv2
 def to_box(r):
     boxes = []
     scores = []
@@ -46,7 +45,6 @@ def to_box(r):
         if rc[0]==b'text':
             cx,cy,w,h = rc[-1]
             scores.append(rc[1])
-            prob  = rc[1]
             xmin,ymin,xmax,ymax = cx-w/2,cy-h/2,cx+w/2,cy+h/2
             boxes.append([int(xmin),int(ymin),int(xmax),int(ymax)])
     return boxes,scores
@@ -58,11 +56,12 @@ if GPU:
       dn.set_gpu(GPUID)
     except:
         pass
+    
 net = dn.load_net(yoloCfg.encode('utf-8'), yoloWeights.encode('utf-8'), 0)
 meta = dn.load_meta(yoloData.encode('utf-8'))
 os.chdir(pwd)
-def text_detect(img):
+def text_detect(img,scale,maxScale,prob = 0.05):
     
-    r = detect_np(net, meta, img,thresh=0, hier_thresh=0.5, nms=None)##输出所有box,与opencv dnn统一
+    r = detect_np(net, meta, img,thresh=prob, hier_thresh=0.5, nms=None)##输出所有box,与opencv dnn统一
     bboxes = to_box(r)
     return bboxes

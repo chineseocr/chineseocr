@@ -1,11 +1,12 @@
-from config import yoloCfg,yoloWeights,opencvFlag
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+from config import yoloCfg,yoloWeights,AngleModelFlag
 from config import AngleModelPb,AngleModelPbtxt
-from config import IMGSIZE
-from PIL import Image
 import numpy as np
 import cv2
+from apphelper.image import letterbox_image
 
-if opencvFlag=='keras':
+if AngleModelFlag=='tf':
     ##转换为tf模型，以便GPU调用
     import tensorflow as tf
     from tensorflow.python.platform import gfile
@@ -19,16 +20,17 @@ if opencvFlag=='keras':
     inputImg =  sess.graph.get_tensor_by_name('input_1:0')
     predictions = sess.graph.get_tensor_by_name('predictions/Softmax:0')
     keep_prob = tf.placeholder(tf.float32)
-
     
 else:
    angleNet = cv2.dnn.readNetFromTensorflow(AngleModelPb,AngleModelPbtxt)##dnn 文字方向检测
 textNet  = cv2.dnn.readNetFromDarknet(yoloCfg,yoloWeights)##文字定位
 
-def text_detect(img):
-    thresh = 0
+def text_detect(img,scale,maxScale,prob = 0.05):
+    thresh = prob
+
     img_height,img_width = img.shape[:2]
-    inputBlob = cv2.dnn.blobFromImage(img, scalefactor=1.0, size=IMGSIZE,swapRB=True ,crop=False);
+    inputBlob,f = letterbox_image(img,(scale,scale))
+    inputBlob = cv2.dnn.blobFromImage(inputBlob, scalefactor=1.0, size=(scale,scale),swapRB=True ,crop=False);
     textNet.setInput(inputBlob/255.0)
     outputName = textNet.getUnconnectedOutLayersNames()
     outputs = textNet.forward(outputName)
@@ -41,10 +43,10 @@ def text_detect(img):
                 class_id = np.argmax(scores)
                 confidence = scores[class_id]
                 if confidence > thresh:
-                    center_x = int(detection[0] * img_width)
-                    center_y = int(detection[1] * img_height)
-                    width = int(detection[2] * img_width)
-                    height = int(detection[3] * img_height)
+                    center_x = int(detection[0] * scale/f)
+                    center_y = int(detection[1] * scale/f)
+                    width = int(detection[2] * scale/f)
+                    height = int(detection[3] * scale/f)
                     left = int(center_x - width / 2)
                     top = int(center_y - height / 2)
                     if class_id==1:
@@ -52,7 +54,10 @@ def text_detect(img):
                         confidences.append(float(confidence))
                         boxes.append([left, top,left+width, top+height ])
         
-    return np.array(boxes),np.array(confidences)
+    boxes = np.array(boxes)
+    confidences = np.array(confidences)
+    
+    return boxes,confidences
 
 
 
@@ -111,7 +116,7 @@ def angle_detect(img,adjust=True):
     """
     文字方向检测
     """
-    if opencvFlag=='keras':
+    if AngleModelFlag=='tf':
         return angle_detect_tf(img,adjust=adjust)
     else:
         return angle_detect_dnn(img,adjust=adjust)
