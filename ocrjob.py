@@ -5,7 +5,7 @@ Created on Mon Jul 22 02:02:29 2019
 job
 @author: chineseocr
 """
-from helper.redisbase import redisDataBase
+from apphelper.redisbase import redisDataBase
 from config import *
 from crnn.keys import alphabetChinese,alphabetEnglish
 
