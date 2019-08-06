@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-    Created on Sun Aug  4 23:30:48 2019
-    
-    @author: chineseocr
-    """
+Created on Sun Aug  4 23:30:48 2019
+
+@author: chineseocr
+"""
 import redis
 from apphelper.image import PIL_to_base64,base64_to_PIL
 pool = redis.ConnectionPool(host='localhost', port=6379, decode_responses=True)   # host是redis主机，需要redis服务端和客户端都起着 redis默认端口是6379
@@ -17,8 +17,8 @@ import uuid
 
 class redisDataBase:
     """
-        redis相关操作
-        """
+    redis相关操作
+    """
     def put_values(self,resJob,timeOut=20):
         ##向队列推送PIL 并返回识别结果
         timeBegin = time.time()
@@ -31,29 +31,29 @@ class redisDataBase:
             keys.append(ind)
             self.set_dict(imgStringTable,ind,value)
             self.set_list(jobListTable,ind)
-        
-        
+            
+            
         res = [None for key in keys]
         while time.time()-timeBegin<timeOut:
             res = self.get_dict(resSetTable,keys)
             delres = [x for x in res if x is not None]
             if len(delres)==len(keys):
                 break
-    
+            
         ##删除记录
         for key in keys:
             self.del_dict(imgStringTable,key)##删除缓存图像
             self.del_dict(resSetTable,key)##删除缓存图像
-
+        
                 
-                for ind,text in enumerate(res):
-                    resJob[ind]['text'] = text
-
-return resJob
-    
-    
-    
-    
+        for ind,text in enumerate(res):
+            resJob[ind]['text'] = text
+            
+        return resJob
+              
+        
+             
+        
     def get_job(self,callback):
         ##获取队列中的图像
         ind = self.get_list(jobListTable)
@@ -70,44 +70,44 @@ return resJob
                     value=''
                 print(ind,value)
                 self.set_dict(resSetTable,ind,value)##存储识别结果到set
+                
+                        
 
 
-
-
-def set_list(self,name,value):
-    """
+    def set_list(self,name,value):
+        """
         向队列中推送识别值
         """
-            conn.rpush(name,value)
-
-        def get_list(self,name):
+        conn.rpush(name,value)
+        
+    def get_list(self,name):
         """
-            获取队列值
-            """
+        获取队列值
+        """
         value = conn.lpop(name)
-                return value
-
-def set_dict(self,name,key,value):
-    """
+        return value
+    
+    def set_dict(self,name,key,value):
+        """
         设置键值对
         """
-            conn.hset(name, key,value)
-
-        def get_dict(self,name,keys):
+        conn.hset(name, key,value)
+        
+    def get_dict(self,name,keys):
         """
-            批量取出
-            """
+        批量取出
+        """
         return conn.hmget(name, keys)
+    
+    
+    def del_dict(self,name,key):
+        conn.hdel(name, key)
+        
+        
+    
 
-
-def del_dict(self,name,key):
-    conn.hdel(name, key)
-
-
-
-
-
-
-
-
-
+    
+    
+    
+    
+ 
