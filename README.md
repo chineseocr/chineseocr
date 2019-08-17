@@ -1,5 +1,5 @@
 ## 本项目基于[yolo3](https://github.com/pjreddie/darknet.git) 与[crnn](https://github.com/meijieru/crnn.pytorch.git)  实现中文自然场景文字检测及识别
-master分支将保留一周，后续app分支将替换为app   
+master分支将保留一周，后续app分支将替换为master 
 
 
 # 实现功能
