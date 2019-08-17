@@ -1,4 +1,5 @@
 ## 本项目基于[yolo3](https://github.com/pjreddie/darknet.git) 与[crnn](https://github.com/meijieru/crnn.pytorch.git)  实现中文自然场景文字检测及识别
+master分支将保留一周，后续app分支将替换为app    
 
 # 实现功能
 - [x]  文字方向检测 0、90、180、270度检测（支持dnn/tensorflow） 
@@ -78,37 +79,4 @@ mv zh_giga.no_cna_cmn.prune01244.klm chineseocr/models/
 ##建立镜像   
 docker build -t chineseocr .   
 ##启动服务   
-docker run -d -p 8080:8080 chineseocr /root/anaconda3/bin/python app.py
-
-```
-
-## web服务启动
-``` Bash
-cd chineseocr## 进入chineseocr目录
-python app.py 8080 ##8080端口号，可以设置任意端口
-```
-
-## 访问服务
-http://127.0.0.1:8080/ocr
-
-<img width="500" height="300" src="https://github.com/chineseocr/chineseocr/blob/master/test/demo.png"/>
-
-
-
-## 识别结果展示
-
-<img width="500" height="300" src="https://github.com/chineseocr/chineseocr/blob/master/test/train-demo.png"/>
-<img width="500" height="300" src="https://github.com/chineseocr/chineseocr/blob/master/test/idcard-demo.png"/>
-<img width="500" height="300" src="https://github.com/chineseocr/chineseocr/blob/master/test/img-demo.png"/>
-<img width="500" height="300" src="https://github.com/chineseocr/chineseocr/blob/master/test/line-demo.png"/>
-
-
-
-## 参考
-1. yolo3 https://github.com/pjreddie/darknet.git   
-2. crnn  https://github.com/meijieru/crnn.pytorch.git              
-3. ctpn  https://github.com/eragonruan/text-detection-ctpn    
-4. CTPN  https://github.com/tianzhi0549/CTPN       
-5. keras yolo3 https://github.com/qqwweee/keras-yolo3.git    
-6. darknet keras 模型转换参考 参考：https://www.cnblogs.com/shouhuxianjian/p/10567201.html  
-7. 语言模型实现 https://github.com/lukhy/masr
+docker run
