@@ -51,3 +51,5 @@ ocrModelTorchEng         = os.path.join(pwd,"models","ocr-english.pth")
 ocrModelOpencv           = os.path.join(pwd,"models","ocr.pb")
 
 ######################OCR模型###################################################
+
+TIMEOUT=30##超时时间

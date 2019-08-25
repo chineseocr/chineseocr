@@ -144,8 +144,11 @@ class OCR:
                 if textLine:
                     ##单行识别
                     partImg = Image.fromarray(img)
-                    text    = ocr.predict(partImg.convert('L'))
+                    text    = crnn.predict(partImg.convert('L'))
                     res =[ {'text':text,'name':'0','box':[0,0,W,0,W,H,0,H]} ]
+                    os.remove(filelock)
+                    break
+                        
                 else:
                     detectAngle = textAngle
                     result,angle= model.model(img,
