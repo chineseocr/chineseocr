@@ -1,5 +1,9 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
-身份证
+Created on Sun Aug  4 01:01:37 2019
+身份证识别
+@author: chineseocr
 """
 from apphelper.image import union_rbox
 import re

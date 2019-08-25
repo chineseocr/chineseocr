@@ -17,10 +17,13 @@ def post(p,billModel='通用OCR'):
     imgString = read_img_base64(p)
     headers = {}
     param      = {'billModel':billModel,##目前支持三种 通用OCR/ 火车票/ 身份证/
-                  'imgString':imgString,}
+                  'imgString':imgString,
+                      'textAngle':True
+
+}
     param = json.dumps(param)
     if 1:
-            req          =  requests.post(URL,data= param,headers=None,timeout=5)
+            req          =  requests.post(URL,data= param,headers=None,timeout=50)
             data         =  req.content.decode('utf-8')
             data         =  json.loads(data)
     else:
@@ -29,5 +32,5 @@ def post(p,billModel='通用OCR'):
 
     
 if __name__=='__main__':
-    p = 'test/card.png'
+    p = 'test/idcard-demo.jpeg'
     post(p,'身份证')
