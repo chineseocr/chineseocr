@@ -56,13 +56,13 @@ keras 转darknet
 python tools/keras_to_darknet.py -cfg_path models/text.cfg -weights_path models/text.h5 -output_path models/text.weights
 ```
 
-## 编译语言模型
+## 编译语言模型(可选)
 ``` Bash
 git clone --recursive https://github.com/parlance/ctcdecode.git   
 cd ctcdecode   
 pip install .  
 ```
-## 下载语言模型  
+## 下载语言模型 (可选)
 ``` Bash
 wget https://deepspeech.bj.bcebos.com/zh_lm/zh_giga.no_cna_cmn.prune01244.klm
 mv zh_giga.no_cna_cmn.prune01244.klm chineseocr/models/

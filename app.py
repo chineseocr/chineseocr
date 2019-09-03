@@ -11,6 +11,10 @@ import uuid
 from PIL import Image
 web.config.debug  = True
 
+filelock='file.lock'
+if os.path.exists(filelock):
+   os.remove(filelock)
+
 render = web.template.render('templates', base='base')
 from config import *
 from apphelper.image import union_rbox,adjust_box_to_origin,base64_to_PIL
@@ -121,7 +125,7 @@ class OCR:
         t = time.time()
         data = web.data()
         uidJob = uuid.uuid1().__str__()
-        filelock='file.lock'
+        
         data = json.loads(data)
         billModel = data.get('billModel','')
         textAngle = data.get('textAngle',False)##文字检测
