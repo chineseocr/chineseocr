@@ -114,3 +114,8 @@ http://127.0.0.1:8080/ocr
 5. keras yolo3 https://github.com/qqwweee/keras-yolo3.git    
 6. darknet keras 模型转换参考 参考：https://www.cnblogs.com/shouhuxianjian/p/10567201.html  
 7. 语言模型实现 https://github.com/lukhy/masr
+
+
+## 技术支持   
+mail:chineseocr@hotmail.com  
+wechat:lywen52  
