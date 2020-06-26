@@ -129,6 +129,8 @@ class CRNN(nn.Module):
             
         image       = image.view(1,1, *image.size())
         image       = Variable(image)
+        if image.size()[-1]<8:
+            return ''
         preds       = self(image)
         _, preds    = preds.max(2)
         preds       = preds.transpose(1, 0).contiguous().view(-1)
