@@ -55,5 +55,5 @@ class TextDetector:
             
             return text_lines,scores
         else:
-            return []
+            return [],[]
 
