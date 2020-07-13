@@ -1,7 +1,13 @@
 ## 本项目基于[yolo3](https://github.com/pjreddie/darknet.git) 与[crnn](https://github.com/meijieru/crnn.pytorch.git)  实现中文自然场景文字检测及识别
 
 ###  darknet 优化版本：https://github.com/chineseocr/darknet-ocr.git 
+# 训练代码（master分支）    
 
+# ocr训练数据集     
+ocr ctc训练数据集(压缩包解码:chineseocr)         
+百度网盘地址:链接: https://pan.baidu.com/s/1UcUKUUELLwdM29zfbztzdw 提取码: atwn       
+gofile地址:http://gofile.me/4Nlqh/uT32hAjbx   密码 https://github.com/chineseocr/chineseocr   
+  
 # 实现功能
 - [x]  文字方向检测 0、90、180、270度检测（支持dnn/tensorflow） 
 - [x]  支持(darknet/opencv dnn /keras)文字检测,支持darknet/keras训练
