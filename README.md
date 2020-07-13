@@ -46,8 +46,8 @@ lib = CDLL(root+"chineseocr/darknet/libdarknet.so", RTLD_GLOBAL)
 
 ## 下载模型文件   
 模型文件地址:
-* [baidu pan](https://pan.baidu.com/s/1gTW9gwJR6hlwTuyB6nCkzQ)
-
+* 百度网盘:https://pan.baidu.com/s/1gTW9gwJR6hlwTuyB6nCkzQ     
+other-links:http://59.110.234.163:9990/static/models/chineseocr/        
 复制文件夹中的所有文件到models目录
    
 ## 模型转换
@@ -64,17 +64,6 @@ keras 转darknet
 python tools/keras_to_darknet.py -cfg_path models/text.cfg -weights_path models/text.h5 -output_path models/text.weights
 ```
 
-## 编译语言模型(可选)
-``` Bash
-git clone --recursive https://github.com/parlance/ctcdecode.git   
-cd ctcdecode   
-pip install .  
-```
-## 下载语言模型 (可选)
-``` Bash
-wget https://deepspeech.bj.bcebos.com/zh_lm/zh_giga.no_cna_cmn.prune01244.klm
-mv zh_giga.no_cna_cmn.prune01244.klm chineseocr/models/
-```
 ## 模型选择  
 ``` Bash
 参考config.py文件
