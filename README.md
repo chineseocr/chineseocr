@@ -73,7 +73,7 @@ python tools/keras_to_darknet.py -cfg_path models/text.cfg -weights_path models/
 ``` Bash
 ##下载Anaconda3 python 环境安装包（https://repo.anaconda.com/archive/Anaconda3-2019.03-Linux-x86_64.sh） 放置在chineseocr目录下   
 ##建立镜像   
-docker build -t chineseocr .   
+docker build --rm -t chineseocr .
 ##启动服务   
 docker run -d -p 8080:8080 chineseocr /root/anaconda3/bin/python app.py
 
