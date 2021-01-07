@@ -47,7 +47,7 @@ lib = CDLL(root+"chineseocr/darknet/libdarknet.so", RTLD_GLOBAL)
 ## 下载模型文件   
 模型文件地址:
 * 百度网盘:https://pan.baidu.com/s/1gTW9gwJR6hlwTuyB6nCkzQ     
-other-links:http://59.110.234.163:9990/static/models/chineseocr/        
+other-links:http://demo.xliane.com:11000/static/models/table-detect/       
 复制文件夹中的所有文件到models目录
    
 ## 模型转换
