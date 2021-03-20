@@ -47,10 +47,10 @@ lib = CDLL(root+"chineseocr/darknet/libdarknet.so", RTLD_GLOBAL)
 ## 下载模型文件   
 模型文件地址:
 * 百度网盘:https://pan.baidu.com/s/1gTW9gwJR6hlwTuyB6nCkzQ     
-other-links:http://demo.xliane.com:11000/static/models/chineseocr/models/      
+other-links:http://gofile.me/4Nlqh/fNHlWzVWo      
 复制文件夹中的所有文件到models目录
    
-## 模型转换
+## 模型转换（非必须）
 pytorch ocr 转keras ocr     
 ``` Bash
 python tools/pytorch_to_keras.py  -weights_path models/ocr-dense.pth -output_path models/ocr-dense-keras.h5
