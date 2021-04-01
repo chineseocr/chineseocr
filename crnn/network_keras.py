@@ -96,7 +96,7 @@ def keras_crnn(imgH, nc, nclass, nh, leakyRelu=False,lstmFlag=True):
 class CRNN:
     def __init__(self,imgH, nc, nclass, nh, leakyRelu=False,lstmFlag=True,GPU=False,alphabet=None):
         
-        self.model = keras_crnn(imgH, nc, nclass, nh, leakyRelu=lstmFlag,lstmFlag=lstmFlag)
+        self.model = keras_crnn(imgH, nc, nclass, nh, leakyRelu=leakyRelu,lstmFlag=lstmFlag)
         self.alphabet = alphabet
         
     def load_weights(self,path):

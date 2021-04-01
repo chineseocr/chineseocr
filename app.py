@@ -210,5 +210,5 @@ urls = ('/ocr','OCR',)
 
 if __name__ == "__main__":
 
-      app = web.application(urls, globals())
+      app = web.application(urls, globals(), autoreload=False)
       app.run()
