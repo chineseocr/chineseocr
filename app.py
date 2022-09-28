@@ -172,7 +172,7 @@ class OCR:
         
         
         
-                    if billModel=='' or billModel=='通用OCR' :
+                    if billModel in ('', '通用OCR'):
                         result = union_rbox(result,0.2)
                         res = [{'text':x['text'],
                                 'name':str(i),
